@@ -22,14 +22,18 @@ variable "iam_account_id" {
 
 **&#128906; Terraform 자원 배포 템플릿 실행** (\advance_landingzone\iam\)
 
-```bash
+```command
 terraform init
 terraform validate
 terraform plan
 
 terraform apply --auto-approve
 ```
-- Server 원격 접속 및 
+
+**&#128906; IdP 환경 구축**
+
+```command
+
 
 
 ## 환경 검토

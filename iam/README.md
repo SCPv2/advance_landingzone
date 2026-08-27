@@ -88,7 +88,7 @@ Password: `admin`
 webvm_public_nat_ip를 WebVM의 실제 Public NAT IP로 변경
 
 ```powershell
-curl -o keycloak-metadata.xml http://webvm_public_nat_ip:8080/realms/scplab/protocol/saml/descriptor
+curl -f -o keycloak-metadata.xml http://123.41.35.206:8080/realms/scplab/protocol/saml/descriptor
 ```
 
 ## 환경 및 작업 검토
@@ -97,9 +97,11 @@ curl -o keycloak-metadata.xml http://webvm_public_nat_ip:8080/realms/scplab/prot
 
 - IAM 사용자 목록 및 권한 연결 상태
 
-- 사용자 및 정책 구성
+**&#128906; 사용자 및 정책 구성 목표**
 
-기존 주체 수정
+
+- 기존 주체 수정
+  
 |부서|유형|이름|기존 정책|변경 정책|인증 유형|접근 IP|  
 |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|   
 |개발팀|사용자|Alex|AdministratorAccess||||   
@@ -107,14 +109,16 @@ curl -o keycloak-metadata.xml http://webvm_public_nat_ip:8080/realms/scplab/prot
 |개발팀|사용자|Scott|AdministratorAccess|DBAccess(Custom)|모든 인증|사내 IP|  
 |운영팀|사용자|Jeff|AdministratorAccess|AdministratorAccess|모든 인증|사내 IP|  
 
-신규 주체 생성
+- 신규 주체 생성
+
 |부서|유형|이름|기존 정책|변경 정책|인증 유형|접근 IP|  
 |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|  
 |운영팀|역할|Leonard|AdministratorAccess|NetworkAccess(Custom)|모든 인증|사내 IP|  
 |개발팀|그룹|DeveloperGroup|신규|DeveloperAccess(Custom)|인증키|사내 IP|  
 |외부회사|None|Steven|None|WebDevAccess(Custom)|임시키|외부회사 IP|  
 
-사용자 정의 정책
+- 사용자 정의 정책
+
 |정책명|인증 유형|정책|  
 |:-----:|:-----:|:-----:|    
 |DBAccess|모든 인증|VPC/Firewall/Security Group 전체 허용|  
@@ -221,10 +225,92 @@ scp-cli virtualserver server show --server_id appvm_자원_ID
 scp-cli virtualserver server show --server_id webvm_자원_ID
 ```
 
+## 사용자 그룹에 기존 사용자 추가(DBA)
 
+- DBA 정책 생성
+  - 정책명 : `DBAccess`
+  - 권한 설정(JSON 모드)
+    ```json
+    {
+    	"Version": "2024-07-01",
+    	"Statement": [
+    		{
+    			"Sid": "VisualEditor0",
+    			"Effect": "Allow",
+    			"Action": [
+    				"postgresql:*"
+    			],
+    			"Resource": [
+    				"*"
+    			]
+    		}
+    	]
+    }
+    ```
+- DBA 정책 연결
+- DBA 사용자 그룹 연결
+  - 사용자 그룹명 : `DeveloperGroup`
 
+## 역할(자격 증명 공급자)로 네트워크 엔지니어 권한 부여
 
-## 자격 증명 공급자 
+- 네트워크 엔지니어 정책 생성
+  - 정책명 : `NetworkEngineerAccess`
+  - 권한 설정(JSON 모드)
+    ```json
+    {
+    	"Version": "2024-07-01",
+    	"Statement": [
+    		{
+    			"Sid": "VisualEditor0",
+    			"Effect": "Allow",
+    			"Action": [
+    				"vpc:*"
+    			],
+    			"Resource": [
+    				"*"
+    			]
+    		},
+    		{
+    			"Sid": "VisualEditor1",
+    			"Effect": "Allow",
+    			"Action": [
+    				"direct-connect:*"
+    			],
+    			"Resource": [
+    				"*"
+    			]
+    		},
+    		{
+    			"Sid": "VisualEditor2",
+    			"Effect": "Allow",
+    			"Action": [
+    				"firewall:*"
+    			],
+    			"Resource": [
+    				"*"
+    			]
+    		},
+    		{
+    			"Sid": "VisualEditor3",
+    			"Effect": "Allow",
+    			"Action": [
+    				"security-group:*"
+    			],
+    			"Resource": [
+    				"*"
+    			]
+    		}
+    	]
+    }
+    ```
+
+- 자격 증명 공급자 생성
+  - 자역 증명 공급자명 : `creative-energy`
+  - 메타 데이터 : `keycloak-metadata.xml`     # 앞서 IdP로 생성한 Keycloak에서 받은 XML
+
+- 역할 생성
+  - 역할명: `NetworkEngineerRole`
+  - 
 
 |정책명|인증 유형|정책|  
 |DeveloperAccess|인증키|Virtual Server(ceapp)전체 허용|  

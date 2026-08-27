@@ -43,7 +43,7 @@ icacls mykey.pem /inheritance:r /grant:r "$($env:USERNAME):R"
 
 - WebVM에 원격 접속 IdP 테스트용 소프트웨어 설치(Keycloak)
 
-아래 두개의 명령에서 webvm_public_nat_ip를 WebVM의 실제 Public NAT IP로 변경
+아래의 두개의 명령에서 webvm_public_nat_ip를 WebVM의 실제 Public NAT IP로 변경
 
 ```powershell
 # WebVM 접속(변수 수정해서 실행)
@@ -83,6 +83,13 @@ Password: admin
 - 비밀 번호 지정(Credentials 탭)
   - Password: 반드시 입력
   - Temporary: Off
+
+- 실습자 PC에서 실행(webvm_public_nat_ip를 WebVM의 실제 Public NAT IP로 변경)
+
+```powershell
+curl -o keycloak-metadata.xml http://webvm_public_nat_ip:8080/realms/scplab/protocol/saml/descriptor
+```
+
 
 
 

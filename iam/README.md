@@ -143,23 +143,24 @@ curl -o keycloak-metadata.xml http://webvm_public_nat_ip:8080/realms/scplab/prot
   - 권한 설정(JSON 모드)
     ```json
     {
-    	"Version": "2024-07-01",
     	"Statement": [
     		{
-    			"Sid": "VisualEditor0",
-    			"Effect": "Allow",
     			"Action": [
     				"iam:CreateAccessKey",
     				"iam:DeleteAccessKey",
     				"iam:ListAccessKeys",
     				"iam:ShowAccessKey",
-    				"iam:SetAccessKey"
+    				"iam:SetAccessKey",
+    				"iam:ListEndpoints"
     			],
+    			"Effect": "Allow",
     			"Resource": [
     				"*"
-    			]
+    			],
+    			"Sid": "AccessKey"
     		}
-    	]
+    	],
+    	"Version": "2024-07-01"
     }
     ```
 
@@ -168,38 +169,60 @@ curl -o keycloak-metadata.xml http://webvm_public_nat_ip:8080/realms/scplab/prot
   - 권한 설정(JSON 모드)
     ```json
     {
-    	"Version": "2024-07-01",
     	"Statement": [
     		{
-    			"Sid": "VisualEditor0",
-    			"Effect": "Allow",
     			"Action": [
     				"*"
     			],
-    			"Resource": [
-    				"*"
-    			],
     			"Condition": {
-    				"IpAddress": {
+    				"NotIpAddress": {
     					"scp:SourceIP": [
     						"your_public_ip/32"
     					]
     				}
-    			}
+    			},
+    			"Effect": "Deny",
+    			"Resource": [
+    				"*"
+    			],
+    			"Sid": "statement1"
     		}
-    	]
+    	],
+    	"Version": "2024-07-01"
     }
     ```
     위에서 your_public_ip는 실습자 PC의 Public IP 입력
 
-
-
-
-
 - 사용자 그룹 생성
   - 사용자 그룹명 : `devloperGroup`
   - 사용자 : Alex, Robert
-  - 정책 연결 : DeveloperAccess, AccessPolicy, AccessKeyPolicy
+  - 정책 연결 : DeveloperAccess, NetworkAccessPolicy, AccessKeyAccess
+ 
+- 개발자 권한 테스트
+
+콘솔에서 인증키를 생성한 후 CLI 환경 설정에 인증키 입력
+
+CLI 다운로드 : https://docs.e.samsungsdscloud.com/clireference/cli-common/
+
+```powershell
+edit $env:USERPROFILE\.scp\cli-config.json
+```
+CLI 환경 설정
+```json
+{
+     "auth_url": "https://iam.e.samsungsdscloud.com/v1/endpoints",
+     "access_key": "인증키 access-key 입력",
+     "access_secret_key": "인증키 access-secret-key 입력",
+     "default_scp_region": "kr
+```
+
+```powershell
+scp-cli virtualserver server show --server_id appvm_자원_ID
+scp-cli virtualserver server show --server_id webvm_자원_ID
+```
+
+
+
 
 ## 자격 증명 공급자 
 

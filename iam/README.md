@@ -28,12 +28,19 @@ terraform validate
 terraform plan
 
 terraform apply --auto-approve
+
+terraform output -raw keypair_private_key > mykey.pem 
 ```
 
 **&#128906; IdP 환경 구축**
 
-```command
+- WebVM에 원격 접속
 
+```command
+ssh -i mykey.pem webvm_public_nat_ip
+```
+
+- WebVM에서 
 
 
 ## 환경 검토

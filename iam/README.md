@@ -4,8 +4,6 @@
 
 **&#128906; 사용자 변수 입력** (\advance_landingzone\iam\variables.tf)
 
-아래 두개 변수를 실제 값으로 수정
-
 your_public _ip : 실습자가 사용하고 있는 PC의 Public IP 주소
 
 your_account_id : 실습자가 접속하고 있는 Samsung Cloud Platform의 Account ID
@@ -39,11 +37,11 @@ icacls mykey.pem /inheritance:r /grant:r "$($env:USERNAME):R"
 
 ```
 
-**&#128906; IdP 환경 구축**
+**&#128906; IdP 환경 구성**
 
-- WebVM에 원격 접속 IdP 테스트용 소프트웨어 설치(Keycloak)
+- WebVM에 IdP 구성(Keycloak)
 
-아래의 두개의 명령에서 webvm_public_nat_ip를 WebVM의 실제 Public NAT IP로 변경
+아래 명령에서 webvm_public_nat_ip를 WebVM의 실제 Public NAT IP로 변경
 
 ```powershell
 # WebVM 접속(변수 수정해서 실행)
@@ -64,59 +62,86 @@ sudo docker exec $(sudo docker ps -qf ancestor=quay.io/keycloak/keycloak) /opt/k
 sudo docker exec $(sudo docker ps -qf ancestor=quay.io/keycloak/keycloak) /opt/keycloak/bin/kcadm.sh update realms/master -s sslRequired=NONE
 ```
 
-- Keycloak 접속 후 Password 변경
-ID: admin
-Password: admin
+- Keycloak 설정
 
-- Realm 생성 : creative-energy
+```url
+http://webvm_public_nat_ip:8080
+```
 
-- Require SSL 해제  
-  - Realm settings → General → Require SSL → None
+ID: `admin`
+Password: `admin`
 
-- 사용자 생성 (Users → Create User)
-  - Email verified: On  
-  - Username: leonard  
+- Realm 명 : `creative-energy`
+
+- 사용자 
+  - Email verified: On 
+  - Username: `leonard`  
   - Email: 반드시 입력
-  - First name: Leonard
-  - Last name: Davinci
+  - First name: `Leonard`
+  - Last name: `Davinci`
 
 - 비밀 번호 지정(Credentials 탭)
   - Password: 반드시 입력
   - Temporary: Off
 
-- 실습자 PC에서 실행(webvm_public_nat_ip를 WebVM의 실제 Public NAT IP로 변경)
+- 자격 증명 공급자용 메타데이터 추출
+webvm_public_nat_ip를 WebVM의 실제 Public NAT IP로 변경
 
 ```powershell
 curl -o keycloak-metadata.xml http://webvm_public_nat_ip:8080/realms/scplab/protocol/saml/descriptor
 ```
 
+## 환경 및 작업 검토
+
+- Architecture Diagram
+
+- IAM 사용자 목록 및 권한 연결 상태
+
+- 사용자 및 정책 구성
+
+기존 주체 수정
+|부서|유형|이름|기존 정책|변경 정책|인증 유형|접근 IP|  
+|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|   
+|개발팀|사용자|Alex|AdministratorAccess||||   
+|개발팀|사용자|Robert|AdministratorAccess||||  
+|개발팀|사용자|Scott|AdministratorAccess|DBAccess(Custom)|모든 인증|사내 IP|  
+|운영팀|사용자|Jeff|AdministratorAccess|AdministratorAccess|모든 인증|사내 IP|  
+
+신규 주체 생성
+|부서|유형|이름|기존 정책|변경 정책|인증 유형|접근 IP|  
+|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|  
+|운영팀|역할|Leonard|AdministratorAccess|NetworkAccess(Custom)|모든 인증|사내 IP|  
+|개발팀|그룹|DeveloperGroup|신규|DeveloperAccess(Custom)|인증키|사내 IP|  
+|외부회사|None|Steven|None|WebDevAccess(Custom)|임시키|외부회사 IP|  
+
+사용자 정의 정책
+|정책명|인증 유형|정책|  
+|:-----:|:-----:|:-----:|    
+|DBAccess|모든 인증|VPC/Firewall/Security Group 전체 허용|  
+|DeveloperAccess|인증키|Virtual Server(ceapp)전체 허용|  
+|WebDevAccess|임시키|Virtual Server(ceweb)Read/List/Update, 외부회사 IP|  
+|AccessPolicy|모든 인증|전체 허용, 사내 IP|  
+
+
+## 사용자, 사용자 그룹, 사용자 정의 정책 구성(개발자 정책)
+
+- IAM  AdministratorAccess에서 불필요 사용자 삭제 
+
+- 정책 생성(콘솔)
+
+|정책명|인증 유형|정책|  
+|DeveloperAccess|인증키|Virtual Server(ceapp)전체 허용|  
 
 
 
-
-## 환경 검토
-
-- Architectuer Diagram
-
-## Cloud Engineer(jeff)로 콘솔 로그인
+  - 사용자 그룹명: `DeveloperGroup`
+  - 
+  
 
 - IAM 사용자 현황 검토 및 권한 변경
 
-|부서|사용자|기존 정책|변경 정책|비고|
-|:-----:|:-----:|:-----:|:-----:|
-|개발팀|Alex|AdministratorAccess|-|
-|개발팀|Robert|AdministratorAccess|-|
-|운영팀|Jeff|AdministratorAccess|AdministratorAccess|
-|운영팀|Leonard|AdministratorAccess|NetworkAccess|
-|Terraform|VPC1 IGW|10.1.1.110, 10.1.1.111|0.0.0.0/0|TCP 80, 443|Allow|Outbound|HTTP/HTTPS outbound from vm to Internet|
-|New|VPC1 IGW|Your Public IP|10.1.1.100(Service IP)|TCP 80|Allow|Inbound|클라이언트 → LB 연결|
-|||||||||
-|Terraform|VPC2 IGW|10.2.1.0/24|0.0.0.0/0|TCP 80, 443|Allow|Outbound|HTTP/HTTPS outbound from vm to Internet|
-|New|VPC2 IGW|Your Public IP|10.2.1.211(bbwebvm211r)|TCP 80|Allow|Inbound|HTTP inbound from your pc to bbweb vm|
-|||||||||
-|New|Load Balancer|Your Public IP|10.1.1.100(Service IP)|TCP 80|Allow|Outbound|클라이언트 → LB 연결|
-|New|Load Balancer|LB Source NAT IP|10.1.1.111(cewebvm111r IP),10.2.1.211(bbwebvm211r IP)|TCP 80|Allow|Inbound|LB → 멤버 연결|
-|New|Load Balancer|LB 헬스 체크 IP|10.1.1.111(cewebvm111r IP),10.2.1.211(bbwebvm211r IP)|TCP 80|Allow|Inbound|LB → 멤버 헬스 체크|
+
+
 
 - 구분 : Internet Gateway
 

@@ -4,6 +4,8 @@
 
 **&#128906; 사용자 변수 입력** (\advance_landingzone\iam\variables.tf)
 
+아래 두개 변수를 실제 값으로 수정
+
 your_public _ip : 실습자가 사용하고 있는 PC의 Public IP 주소
 
 your_account_id : 실습자가 접속하고 있는 Samsung Cloud Platform의 Account ID
@@ -22,25 +24,67 @@ variable "iam_account_id" {
 
 **&#128906; Terraform 자원 배포 템플릿 실행** (\advance_landingzone\iam\)
 
-```command
+```poweshell
 terraform init
 terraform validate
 terraform plan
 
 terraform apply --auto-approve
 
+# Key Pair 파일 추출 (mykey.pem)
 terraform output -raw keypair_private_key > mykey.pem 
+
+# Key Pair 파일 권한 수정
+icacls mykey.pem /inheritance:r /grant:r "$($env:USERNAME):R"
+
 ```
 
 **&#128906; IdP 환경 구축**
 
-- WebVM에 원격 접속
+- WebVM에 원격 접속 IdP 테스트용 소프트웨어 설치(Keycloak)
 
-```command
-ssh -i mykey.pem webvm_public_nat_ip
+아래 두개의 명령에서 webvm_public_nat_ip를 WebVM의 실제 Public NAT IP로 변경
+
+```powershell
+# WebVM 접속(변수 수정해서 실행)
+ssh -i mykey.pem webvm_public_nat_ip  
+
+# Linux Update 및 Docker 설치
+sudo dnf update -y
+
+sudo dnf -y install dnf-plugins-core
+sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo dnf -y install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+sudo systemctl enable --now docker
+sudo dnf -y install podman
+
+# Keycloak 컨테이너 배포(변수 수정해서 실행)
+sudo docker run -d -p 8080:8080 -e KC_BOOTSTRAP_ADMIN_USERNAME=admin -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin -e KC_HOSTNAME=http://webvm_public_nat_ip:8080 quay.io/keycloak/keycloak:latest start-dev
+sudo docker exec $(sudo docker ps -qf ancestor=quay.io/keycloak/keycloak) /opt/keycloak/bin/kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin --password admin
+sudo docker exec $(sudo docker ps -qf ancestor=quay.io/keycloak/keycloak) /opt/keycloak/bin/kcadm.sh update realms/master -s sslRequired=NONE
 ```
 
-- WebVM에서 
+- Keycloak 접속 후 Password 변경
+ID: admin
+Password: admin
+
+- Realm 생성 : creative-energy
+
+- Require SSL 해제  
+  - Realm settings → General → Require SSL → None
+
+- 사용자 생성 (Users → Create User)
+  - Email verified: On  
+  - Username: leonard  
+  - Email: 반드시 입력
+  - First name: Leonard
+  - Last name: Davinci
+
+- 비밀 번호 지정(Credentials 탭)
+  - Password: 반드시 입력
+  - Temporary: Off
+
+
 
 
 ## 환경 검토

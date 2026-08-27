@@ -29,13 +29,32 @@ terraform plan
 
 terraform apply --auto-approve
 ```
+- Server 원격 접속 및 
+
 
 ## 환경 검토
 
 - Architectuer Diagram
 
+## Cloud Engineer(jeff)로 콘솔 로그인
 
-## Load Balancer용 Public IP 예약
+- IAM 사용자 현황 검토 및 권한 변경
+
+|부서|사용자|기존 정책|변경 정책|비고|
+|:-----:|:-----:|:-----:|:-----:|
+|개발팀|Alex|AdministratorAccess|-|
+|개발팀|Robert|AdministratorAccess|-|
+|운영팀|Jeff|AdministratorAccess|AdministratorAccess|
+|운영팀|Leonard|AdministratorAccess|NetworkAccess|
+|Terraform|VPC1 IGW|10.1.1.110, 10.1.1.111|0.0.0.0/0|TCP 80, 443|Allow|Outbound|HTTP/HTTPS outbound from vm to Internet|
+|New|VPC1 IGW|Your Public IP|10.1.1.100(Service IP)|TCP 80|Allow|Inbound|클라이언트 → LB 연결|
+|||||||||
+|Terraform|VPC2 IGW|10.2.1.0/24|0.0.0.0/0|TCP 80, 443|Allow|Outbound|HTTP/HTTPS outbound from vm to Internet|
+|New|VPC2 IGW|Your Public IP|10.2.1.211(bbwebvm211r)|TCP 80|Allow|Inbound|HTTP inbound from your pc to bbweb vm|
+|||||||||
+|New|Load Balancer|Your Public IP|10.1.1.100(Service IP)|TCP 80|Allow|Outbound|클라이언트 → LB 연결|
+|New|Load Balancer|LB Source NAT IP|10.1.1.111(cewebvm111r IP),10.2.1.211(bbwebvm211r IP)|TCP 80|Allow|Inbound|LB → 멤버 연결|
+|New|Load Balancer|LB 헬스 체크 IP|10.1.1.111(cewebvm111r IP),10.2.1.211(bbwebvm211r IP)|TCP 80|Allow|Inbound|LB → 멤버 헬스 체크|
 
 - 구분 : Internet Gateway
 

@@ -120,14 +120,88 @@ curl -o keycloak-metadata.xml http://webvm_public_nat_ip:8080/realms/scplab/prot
 |DBAccess|모든 인증|VPC/Firewall/Security Group 전체 허용|  
 |DeveloperAccess|인증키|Virtual Server(ceapp)전체 허용|  
 |WebDevAccess|임시키|Virtual Server(ceweb)Read/List/Update, 외부회사 IP|  
-|AccessPolicy|모든 인증|전체 허용, 사내 IP|  
+|AccessPolicy|모든 인증|전체 허용, 사내 IP|
+|AccessKeyAccess|모든 인증|Identity Access Management AccessKey액션만 허용, 사내 IP|
 
 
 ## 사용자, 사용자 그룹, 사용자 정의 정책 구성(개발자 정책)
 
-- IAM  AdministratorAccess에서 불필요 사용자 삭제 
+- 과도하게 부여된 사용자 정책 조정  
+  IAM AdministratorAccess에서 불필요 사용자 제외
 
-- 정책 생성(콘솔)
+- 개발자 정책 생성(Visual Editor)
+  - 정책명 : `DeveloperAccess`
+  - 서비스 : Virtual Server
+  - 제어 유형 : 허용 정책
+  - 액션 : Create / Delete / List / Read / Update
+  - 적용 자원 : 개별 자원 : appvm
+  - 인증 유형 : 인증키 인증
+  - 적용 IP : 모든 IP
+
+- 공통 정책 생성(인증키)
+  - 정책명 : `AccessKeyAccess`
+  - 권한 설정(JSON 모드)
+    ```json
+    {
+    	"Version": "2024-07-01",
+    	"Statement": [
+    		{
+    			"Sid": "VisualEditor0",
+    			"Effect": "Allow",
+    			"Action": [
+    				"iam:CreateAccessKey",
+    				"iam:DeleteAccessKey",
+    				"iam:ListAccessKeys",
+    				"iam:ShowAccessKey",
+    				"iam:SetAccessKey"
+    			],
+    			"Resource": [
+    				"*"
+    			]
+    		}
+    	]
+    }
+    ```
+
+- 공통 정책 생성(IP 접근 제어)
+  - 정책명 : `NetworkAccessPolicy`
+  - 권한 설정(JSON 모드)
+    ```json
+    {
+    	"Version": "2024-07-01",
+    	"Statement": [
+    		{
+    			"Sid": "VisualEditor0",
+    			"Effect": "Allow",
+    			"Action": [
+    				"*"
+    			],
+    			"Resource": [
+    				"*"
+    			],
+    			"Condition": {
+    				"IpAddress": {
+    					"scp:SourceIP": [
+    						"your_public_ip/32"
+    					]
+    				}
+    			}
+    		}
+    	]
+    }
+    ```
+    위에서 your_public_ip는 실습자 PC의 Public IP 입력
+
+
+
+
+
+- 사용자 그룹 생성
+  - 사용자 그룹명 : `devloperGroup`
+  - 사용자 : Alex, Robert
+  - 정책 연결 : DeveloperAccess, AccessPolicy, AccessKeyPolicy
+
+## 자격 증명 공급자 
 
 |정책명|인증 유형|정책|  
 |DeveloperAccess|인증키|Virtual Server(ceapp)전체 허용|  

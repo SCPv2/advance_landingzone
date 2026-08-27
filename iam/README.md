@@ -20,7 +20,7 @@ variable "iam_account_id" {
 }
 ```
 
-**&#128906; Terraform 자원 배포 템플릿 실행** (\advance_networking\load_balancing)
+**&#128906; Terraform 자원 배포 템플릿 실행** (\advance_landingzone\iam\)
 
 ```bash
 terraform init
@@ -34,37 +34,6 @@ terraform apply --auto-approve
 
 - Architectuer Diagram
 
-- VPC CIDR
-- Subnet CIDR
-- Virtual Server OS, Public IP, Private IP
-- Firewall 규칙
-- Security Group 규칙
-
-- **Firewall**
-
-|Deployment|Firewall|Source|Destination|Service|Action|Direction|Description|
-|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----|
-|Terraform|VPC1 IGW|Your Public IP|10.1.1.110|TCP 3389|Allow|Inbound|RDP inbound to bastion|
-|Terraform|VPC1 IGW|10.1.1.110, 10.1.1.111|0.0.0.0/0|TCP 80, 443|Allow|Outbound|HTTP/HTTPS outbound from vm to Internet|
-|Terraform|VPC2 IGW|10.2.1.0/24|0.0.0.0/0|TCP 80, 443|Allow|Outbound|HTTP/HTTPS outbound from vm to Internet|
-
-- **Security Group**
-
-|Deployment|Security Group|Direction|Target Address   Remote SG|Service|Description|
-|:-----:|:-----:|:-----:|:-----:|:-----:|:-----|
-|Terraform|bastionSG|Inbound|Your Public IP|TCP 3389|RDP inbound to bastion VM|
-|Terraform|bastionSG|Outbound|0.0.0.0/0|TCP 80|HTTP outbound to Internet|
-|Terraform|bastionSG|Outbound|0.0.0.0/0|TCP 443|HTTPS outbound to Internet|
-|User Add|bastionSG|Outbound|cewebSG|TCP 22|SSH outbound to ceweb vm|
-|User Add|bastionSG|Outbound|bbwebSG|TCP 22|SSH outbound to bbweb vm|
-|||||||
-|Terraform|cewebSG|Outbound|0.0.0.0/0|TCP 443|HTTPS outbound to Internet|
-|Terraform|cewebSG|Outbound|0.0.0.0/0|TCP 80|HTTP outbound to Internet|
-|User Add|cewebSG|Inbound|bastionSG|TCP 22|SSH inbound from bastion|
-|||||||
-|Terraform|bbwebSG|Outbound|0.0.0.0/0|TCP 80|HTTP outbound to Internet|
-|Terraform|bbwebSG|Outbound|0.0.0.0/0|TCP 443|HTTPS outbound to Internet|
-|User Add|bbwebSG|Inbound|bastionSG|TCP 22|SSH inbound from bastion|
 
 ## Load Balancer용 Public IP 예약
 

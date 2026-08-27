@@ -3,7 +3,9 @@
 ## Samsung Cloud Platform 실습 환경 배포
 
 **&#128906; 사용자 변수 입력** (\advance_landingzone\iam\variables.tf)
+
 your_public _ip : 실습자가 사용하고 있는 PC의 Public IP 주소
+
 your_account_id : 실습자가 접속하고 있는 Samsung Cloud Platform의 Account ID
 
 ```hcl

@@ -130,6 +130,8 @@ curl -f -o keycloak-metadata.xml http://123.41.35.206:8080/realms/scplab/protoco
 
 ## 사용자, 사용자 그룹, 사용자 정의 정책 구성(개발자 정책)
 
+**&#128906; Jeff(Cloud Engineer) 콘솔**
+
 - 과도하게 부여된 사용자 정책 조정  
   IAM AdministratorAccess에서 불필요 사용자 제외
 
@@ -201,6 +203,8 @@ curl -f -o keycloak-metadata.xml http://123.41.35.206:8080/realms/scplab/protoco
   - 사용자 그룹명 : `devloperGroup`
   - 사용자 : Alex, Robert
   - 정책 연결 : DeveloperAccess, NetworkAccessPolicy, AccessKeyAccess
+
+**&#128906; Alex(Developer) 콘솔**
  
 - 개발자 권한 테스트
 
@@ -226,6 +230,8 @@ scp-cli virtualserver server show --server_id webvm_자원_ID
 ```
 
 ## 사용자 그룹에 기존 사용자 추가(DBA)
+
+**&#128906; Jeff(Cloud Engineer) 콘솔**
 
 - DBA 정책 생성
   - 정책명 : `DBAccess`
@@ -350,7 +356,7 @@ https://console.kr-west1.e.samsungsdscloud.com/your_account_id/saml/acs/SP_Entit
 
  ## 임시키 인증을 위한 설정(외부회사 웹개발자)
 
-[Jeff's 콘솔]
+**&#128906; Jeff(Cloud Engineer) 콘솔**
 
 - 외부 웹개발자 정책 생성
   - 정책명 : `ExternalWebDevAccess`
@@ -397,7 +403,7 @@ https://console.kr-west1.e.samsungsdscloud.com/your_account_id/saml/acs/SP_Entit
   - 비밀번호 : 임의 지정
   - 권한 설정 방식 : 정책에 직접 연결 : ExternalWebDevAccess, AccessKeyAccess, TempKeyManagement
 
-[externalwebdev 콘솔]
+**&#128906; externalwebdev 콘솔**
 
 - 인증키 생성(만료일 영구)
 
@@ -408,4 +414,16 @@ https://console.kr-west1.e.samsungsdscloud.com/your_account_id/saml/acs/SP_Entit
   - Token 사용 기간 : 30일
   - 임시키 교체 주기 : 1시간
   - 접근 허용 IP : 외부회사 지정 IP
- 
+
+- Secret Vault Token ID & Secret 확인
+   
+**&#128906; Jeff(Cloud Engineer) 콘솔**
+
+- externalwebdev에서 권한 제거 : AccessKeyAccess, TempKeyManagement
+
+**&#128906; externalwebdev의 Local PC**
+
+- 임시키를 이용한 API 호출 테스트
+
+API 호출용 스크립트 : 
+

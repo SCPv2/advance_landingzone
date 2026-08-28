@@ -133,7 +133,7 @@ curl -f -o keycloak-metadata.xml http://123.41.35.206:8080/realms/scplab/protoco
 - 과도하게 부여된 사용자 정책 조정  
   IAM AdministratorAccess에서 불필요 사용자 제외
 
-- 개발자 정책 생성(Visual Editor)
+- 개발자 정책 생성
   - 정책명 : `DeveloperAccess`
   - 서비스 : Virtual Server
   - 제어 유형 : 허용 정책
@@ -343,4 +343,69 @@ https://console.kr-west1.e.samsungsdscloud.com/your_account_id/saml/acs/SP_Entit
     - SAML Attribute NameFormat : Basic
     - Attribute value : 앞서 생성했던 NetworkEngineerRole의 SRN, 자격 증명 공급자의 SRN
 
+
+
+
+
+
+ ## 임시키 인증을 위한 설정(외부회사 웹개발자)
+
+[Jeff's 콘솔]
+
+- 외부 웹개발자 정책 생성
+  - 정책명 : `ExternalWebDevAccess`
+  - 서비스 : Virtual Server
+  - 제어 유형 : 허용 정책
+  - 액션 : List / Read / Update
+  - 적용 자원 : 개별 자원 : webvm }
+  - 인증 유형 : 인증키 인증
+  - 적용 IP : 외부회사 지정 IP
+
+- 임시키 관리를 위한 권한 설정
+  - 정책명 : `TempKeyManagement`
+  - 권한 설정(JSON 모드)
+  ```json
+  {
+  	"Version": "2024-07-01",
+  	"Statement": [
+  		{
+  			"Sid": "VisualEditor0",
+  			"Effect": "Allow",
+  			"Action": [
+  				"secretvault:*"
+  			],
+  			"Resource": [
+  				"*"
+  			]
+  		},
+  		{
+  			"Sid": "VisualEditor1",
+  			"Effect": "Allow",
+  			"Action": [
+  				"iam:*"
+  			],
+  			"Resource": [
+  				"*"
+  			]
+  		}
+  	]
+  }
+  ```
+
+- 외부 웹개발자 관리용 사용자 생성
+  - 사용자명 : externalwebdev
+  - 비밀번호 : 임의 지정
+  - 권한 설정 방식 : 정책에 직접 연결 : ExternalWebDevAccess, AccessKeyAccess, TempKeyManagement
+
+[externalwebdev 콘솔]
+
+- 인증키 생성(만료일 영구)
+
+- Secret Vault 생성
+  - Secret명 : `externalwebdev`
+  - 유형 : SCP Open API Key
+  - 인증키 : 앞서 생성한 인증키 선택
+  - Token 사용 기간 : 30일
+  - 임시키 교체 주기 : 1시간
+  - 접근 허용 IP : 외부회사 지정 IP
  

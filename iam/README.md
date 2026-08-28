@@ -425,5 +425,9 @@ https://console.kr-west1.e.samsungsdscloud.com/your_account_id/saml/acs/SP_Entit
 
 - 임시키를 이용한 API 호출 테스트
 
-API 호출용 스크립트 : 
+API 호출용 스크립트 : [Invoke-ScpApi.ps1](./Invoke-ScpApi.ps1)
+
+```powershell
+
+
 

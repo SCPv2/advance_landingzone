@@ -4,51 +4,47 @@
 
 **&#128906; 실습 도구 설치**
 
-- 작업 디렉토리 생성
-
-```powershell
-mkdir c:\scpv2lab
-cd c:\scpv2lab
-```
+- 작업 디렉토리 생성 및 작업 환경 가져오기
+  ```powershell
+  mkdir c:\scpv2lab
+  cd c:\scpv2lab
+  
+  # c:\scpv2lab을 사용자 PATH에 등록
+  $d='C:\scpv2lab'; $p=[Environment]::GetEnvironmentVariable('Path','User'); if($p -split ';' -notcontains $d){[Environment]::SetEnvironmentVariable('Path',($p.TrimEnd(';')+';'+$d),'User')}; $env:Path+=";$d"
+  
+  # Advance LandingZone 실습 챕터 실습 파일 가져오기
+  git clone https://github.com/SCPv2/advance_landingzone.git
+  ```
 
 - Samsung Cloud Platform CLI 및 Terraform 환경 설정
 
-아래 파일을 다운로드해서 작업 디렉토리(C:\scpv2lab)에 저장
-
-CLI 다운로드 : https://docs.e.samsungsdscloud.com/clireference/cli-common/
-
-Terraform 다운로드 : https://developer.hashicorp.com/terraform/install
+  아래 파일을 다운로드해서 작업 디렉토리(C:\scpv2lab)에 저장
+  
+  CLI 다운로드 : https://docs.e.samsungsdscloud.com/clireference/cli-common/
+  
+  Terraform 다운로드 : https://developer.hashicorp.com/terraform/install
 
 ## 실습 환경 배포
 
-**&#128906; Terraform 파일 다운로드** 
-
-작업 디렉토리(C:\scpv2lab)에서 Git 명령 실행
-
-```powershell
-
-
-- [main.tf](./main.tf)  
-- [variables.tf](variables.tf)  
-- [outputs.tf](outputs.tf)  
-
-**&#128906; 사용자 변수 입력** (variables.tf)
-
-your_public _ip : 실습자가 사용하고 있는 PC의 Public IP 주소
-
-your_account_id : 실습자가 접속하고 있는 Samsung Cloud Platform의 Account ID
-
-```hcl
-variable "user_public_ip" {
-  type    = string
-  default = "your_public_ip"
-}
-
-variable "iam_account_id" {
-  type    = string
-  default = "your_account_id"
-}
-```
+**&#128906; 사용자 변수 입력** (c:\scpv2lab\advancevariables.tf)  
+ -  variables.tf 수정  
+    ```powershell
+      
+    edit C:\scpv2lab\advance_landingzone\iam\variables.tf
+    ```
+    your_public _ip : 실습자가 사용하고 있는 PC의 Public IP 주소  
+    your_account_id : 실습자가 접속하고 있는 Samsung Cloud Platform의 Account ID
+    ```hcl
+    variable "user_public_ip" {
+      type    = string
+      default = "your_public_ip"
+    }
+    
+    variable "iam_account_id" {
+      type    = string
+      default = "your_account_id"
+    }
+    ```
 
 **&#128906; Terraform 자원 배포 템플릿 실행** 
 
@@ -69,12 +65,11 @@ icacls mykey.pem /inheritance:r /grant:r "$($env:USERNAME):R"
 
 ## 환경 및 작업 검토
 
-- Architecture Diagram
+- Architecture Diagram 검토
 
 - IAM 사용자 목록 및 권한 연결 상태
 
 **&#128906; 사용자 및 정책 구성 목표**
-
 
 - 기존 주체 수정
   
@@ -96,7 +91,7 @@ icacls mykey.pem /inheritance:r /grant:r "$($env:USERNAME):R"
 
 |정책명|인증 유형|정책|  
 |:-----:|:-----:|:-----:|    
-|DBAccess|모든 인증|VPC/Firewall/Security Group 전체 허용|  
+|DBAccess|모든 인증|VPC/Firewall/Security Group/DirectConnect 전체 허용|  
 |DeveloperAccess|인증키|Virtual Server(ceweb,ceapp)전체 허용|  
 |WebDevAccess|모든 인증|Virtual Server(ceweb)Read/List/Update, 외부회사 IP|  
 |NetworkAccessPolicy|모든 인증|전체 서비스/모든 자원,거부,모든 IP 적용(사내 IP 제외)|
@@ -144,7 +139,7 @@ icacls mykey.pem /inheritance:r /grant:r "$($env:USERNAME):R"
     }
     ```
 
-- 공통 정책 생성(IP 접근 제어)
+- 공통 정책 생성(사내 IP로 접근 제어)
   - 정책명 : `NetworkAccessPolicy`
   - 권한 설정(JSON 모드)
     ```json
@@ -229,177 +224,18 @@ scp-cli virtualserver server show --server_id webvm_자원_ID
 - DBA 사용자 그룹 연결
   - 사용자 그룹명 : `DeveloperGroup`
 
-## 역할(자격 증명 공급자)로 네트워크 엔지니어 권한 부여
+## 역할(다른 Account)로 네트워크 엔지니어 권한 부여
 
-- 네트워크 엔지니어 정책 생성
-  - 정책명 : `NetworkEngineerAccess`
-  - 권한 설정(JSON 모드)
-    ```json
-    {
-    	"Version": "2024-07-01",
-    	"Statement": [
-    		{
-    			"Sid": "VisualEditor0",
-    			"Effect": "Allow",
-    			"Action": [
-    				"vpc:*"
-    			],
-    			"Resource": [
-    				"*"
-    			]
-    		},
-    		{
-    			"Sid": "VisualEditor1",
-    			"Effect": "Allow",
-    			"Action": [
-    				"direct-connect:*"
-    			],
-    			"Resource": [
-    				"*"
-    			]
-    		},
-    		{
-    			"Sid": "VisualEditor2",
-    			"Effect": "Allow",
-    			"Action": [
-    				"firewall:*"
-    			],
-    			"Resource": [
-    				"*"
-    			]
-    		},
-    		{
-    			"Sid": "VisualEditor3",
-    			"Effect": "Allow",
-    			"Action": [
-    				"security-group:*"
-    			],
-    			"Resource": [
-    				"*"
-    			]
-    		}
-    	]
-    }
-    ```
-
-- 자격 증명 공급자 생성
-  - 자역 증명 공급자명 : `creative-energy`
-  - 메타 데이터 : `keycloak-metadata.xml`     # 앞서 IdP로 생성한 Keycloak에서 받은 XML
-
-생성 후 페이지에서 로그인 URL에서 SP Entity ID를 확인 (SAMLSP00000000AAAAAAAAA 형식)
-
-https://console.kr-west1.e.samsungsdscloud.com/your_account_id/saml/acs/SP_Entity_ID   # your_account_id와 SP_Entity_ID는 실제 값으로 나타남
+- 외부 개발자 정책 생성
+  - 정책명 : `ExternalWebDevAccess`
+  - 권한 설정: 
+    정책 불러오기 - DBAccess
+    액션: List, Read
+    적용 자원: ceweb (ceapp 제외)
+    사용자 지정 IP: 외부회사 지정 IP(실습 편의상 실습자 PC의 Public IP)
 
 - 역할 생성
-  - 역할명: `NetworkEngineerRole`
-  - 최대 세션 지속시간: 12시간
-  - 수행주체: 구분 :  자격 증명 공급자 , Value : creative-energy
-  - 정책 연결 : NetworkEngineerAccess
-
-- IdP 설정을 위해 Keycloak 접속
-  ```url
-  http://webvm_public_ip:8080
-  ```
-
-- Create Client 
-     - Client type : SAML
-     - Client ID :  위 Samsung Cloud Platform의 SP Entity ID 입력
-     - Name : `Samsung Cloud Platform`
-     - Valid redirect URIs : https://console.kr-west1.e.samsungsdscloud.com/your_account_id/saml/acs/*    # your_account_id는 실제 값으로 바꿔서 입력
-     - Master SAML Processing URL	: https://console.kr-west1.e.samsungsdscloud.com/your_account_id/saml/acs/SP_Entity_ID   # your_account_id와 SP_Entity_ID는 실제 값으로 바꿔서 입력
-     - Name ID format : persistent     # username에서 persistent로 변경
-     - Sign assertions : On            # Off에서 On으로 변경 나머지는 기본값
-     - Key 탭 : Client signature required : Off # On에서 Off로 변경
-     - Client scopes 탭 : role_list 삭제 
-
-- email mapper 등록
-  - Clients → SP_Entity_ID → Client scopes → SP_Entity_ID-dedicated → Add predefined mapper → X500 email 선택
-  - Clients → SP_Entity_ID → Client scopes → SP_Entity_ID-dedicated → Add mapper - by Configuration → Hardcoded attribute
-    - Name : `scp-role`
-    - Friendly Name :
-    - SAML Attribute Name : Role
-    - SAML Attribute NameFormat : Basic
-    - Attribute value : 앞서 생성했던 NetworkEngineerRole의 SRN, 자격 증명 공급자의 SRN
-
-
-
-
-
-
- ## 임시키 인증을 위한 설정(외부회사 웹개발자)
-
-**&#128906; Jeff(Cloud Engineer) 콘솔**
-
-- 외부 웹개발자 정책 생성
-  - 정책명 : `ExternalWebDevAccess`
-  - 서비스 : Virtual Server
-  - 제어 유형 : 허용 정책
-  - 액션 : List / Read / Update
-  - 적용 자원 : 개별 자원 : webvm }
-  - 인증 유형 : 인증키 인증
-  - 적용 IP : 외부회사 지정 IP
-
-- 임시키 관리를 위한 권한 설정
-  - 정책명 : `TempKeyManagement`
-  - 권한 설정(JSON 모드)
-  ```json
-  {
-  	"Version": "2024-07-01",
-  	"Statement": [
-  		{
-  			"Sid": "VisualEditor0",
-  			"Effect": "Allow",
-  			"Action": [
-  				"secretvault:*"
-  			],
-  			"Resource": [
-  				"*"
-  			]
-  		},
-  		{
-  			"Sid": "VisualEditor1",
-  			"Effect": "Allow",
-  			"Action": [
-  				"iam:*"
-  			],
-  			"Resource": [
-  				"*"
-  			]
-  		}
-  	]
-  }
-  ```
-
-- 외부 웹개발자 관리용 사용자 생성
-  - 사용자명 : externalwebdev
-  - 비밀번호 : 임의 지정
-  - 권한 설정 방식 : 정책에 직접 연결 : ExternalWebDevAccess, AccessKeyAccess, TempKeyManagement
-
-**&#128906; externalwebdev 콘솔**
-
-- 인증키 생성(만료일 영구)
-
-- Secret Vault 생성
-  - Secret명 : `externalwebdev`
-  - 유형 : SCP Open API Key
-  - 인증키 : 앞서 생성한 인증키 선택
-  - Token 사용 기간 : 30일
-  - 임시키 교체 주기 : 1시간
-  - 접근 허용 IP : 외부회사 지정 IP
-
-- Secret Vault Token ID & Secret 확인
-   
-**&#128906; Jeff(Cloud Engineer) 콘솔**
-
-- externalwebdev에서 권한 제거 : AccessKeyAccess, TempKeyManagement
-
-**&#128906; externalwebdev의 Local PC**
-
-- 임시키를 이용한 API 호출 테스트
-
-API 호출용 스크립트 : [Invoke-ScpApi.ps1](./Invoke-ScpApi.ps1)
-
-```powershell
-
-
-
+  - 역할명: `ExternalWebDevRole`
+  - 최대 세션 지속시간: 2시간
+  - 수행주체: 구분 : 다른 Account , Value : creative-energy
+  - 정책 연결 : `ExternalWebDevAccess`

@@ -231,18 +231,18 @@ scp-cli virtualserver server show --server_id webvm_자원_ID
 **&#128906; Jeff(클라우드 엔지니어) 콘솔**
 
 - 외부 개발자 정책 생성
-  - 정책명 : `ExternalWebDevAccess`
-  - 권한 설정: 
-    정책 불러오기 - DBAccess
-    액션: List, Read
-    적용 자원: ceweb (ceapp 제외)
-    사용자 지정 IP: 외부회사 지정 IP(실습 편의상 실습자 PC의 Public IP)
+  - 정책명 : `ExternalWebDevAccess`  
+  - 권한 설정:   
+    정책 불러오기 - DBAccess  
+    액션: List, Read  
+    적용 자원: ceweb (ceapp 제외)  
+    사용자 지정 IP: 외부회사 지정 IP(실습 편의상 실습자 PC의 Public IP)  
 
 - 역할 생성
-  - 역할명: `ExternalWebDevRole`
-  - 최대 세션 지속시간: 2시간
-  - 수행주체: 구분 : 다른 Account , Value : creative-energy
-  - 정책 연결 : `ExternalWebDevAccess`
+  - 역할명: `ExternalWebDevRole`  
+  - 최대 세션 지속시간: 2시간  
+  - 수행주체: 구분 : 다른 Account , Value : creative-energy  
+  - 정책 연결 : `ExternalWebDevAccess`  
  
 **&#128906; Steve(외부 개발자) 콘솔**
 

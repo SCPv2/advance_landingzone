@@ -1,5 +1,21 @@
 # Identity & Access Management
 
+**&#128906; 실습 도구 설치**
+- 작업 디렉토리 생성
+
+```powershell
+mkdir c:\scpv2lab
+cd c:\scpv2lab
+```
+
+- Samsung Cloud Platform CLI 및 Terraform 환경 설정
+
+CLI 다운로드 : https://docs.e.samsungsdscloud.com/clireference/cli-common/
+
+- Terraform 
+
+
+
 ## Samsung Cloud Platform 실습 환경 배포
 
 **&#128906; 사용자 변수 입력** (\advance_landingzone\iam\variables.tf)
@@ -37,60 +53,6 @@ icacls mykey.pem /inheritance:r /grant:r "$($env:USERNAME):R"
 
 ```
 
-**&#128906; IdP 환경 구성**
-
-- WebVM에 IdP 구성(Keycloak)
-
-아래 명령에서 webvm_public_nat_ip를 WebVM의 실제 Public NAT IP로 변경
-
-```powershell
-# WebVM 접속(변수 수정해서 실행)
-ssh -i mykey.pem webvm_public_nat_ip  
-
-# Linux Update 및 Docker 설치
-sudo dnf update -y
-
-sudo dnf -y install dnf-plugins-core
-sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-sudo dnf -y install docker-ce docker-ce-cli containerd.io docker-compose-plugin
-sudo systemctl enable --now docker
-sudo dnf -y install podman
-
-# Keycloak 컨테이너 배포(변수 수정해서 실행)
-sudo docker run -d -p 8080:8080 -e KC_BOOTSTRAP_ADMIN_USERNAME=admin -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin -e KC_HOSTNAME=http://webvm_public_nat_ip:8080 quay.io/keycloak/keycloak:latest start-dev
-sudo docker exec $(sudo docker ps -qf ancestor=quay.io/keycloak/keycloak) /opt/keycloak/bin/kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin --password admin
-sudo docker exec $(sudo docker ps -qf ancestor=quay.io/keycloak/keycloak) /opt/keycloak/bin/kcadm.sh update realms/master -s sslRequired=NONE
-```
-
-- Keycloak 설정
-
-```url
-http://webvm_public_nat_ip:8080
-```
-
-ID: `admin`
-Password: `admin`
-
-- Realm 명 : `creative-energy`
-
-- 사용자 
-  - Email verified: On 
-  - Username: `leonard`  
-  - Email: 반드시 입력
-  - First name: `Leonard`
-  - Last name: `Davinci`
-
-- 비밀 번호 지정(Credentials 탭)
-  - Password: 반드시 입력
-  - Temporary: Off
-
-- 자격 증명 공급자용 메타데이터 추출
-webvm_public_nat_ip를 WebVM의 실제 Public NAT IP로 변경
-
-```powershell
-curl -f -o keycloak-metadata.xml http://123.41.35.206:8080/realms/scplab/protocol/saml/descriptor
-```
-
 ## 환경 및 작업 검토
 
 - Architecture Diagram
@@ -113,20 +75,18 @@ curl -f -o keycloak-metadata.xml http://123.41.35.206:8080/realms/scplab/protoco
 
 |부서|유형|이름|기존 정책|변경 정책|인증 유형|접근 IP|  
 |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|  
-|운영팀|역할|Leonard|AdministratorAccess|NetworkAccess(Custom)|모든 인증|사내 IP|  
 |개발팀|그룹|DeveloperGroup|신규|DeveloperAccess(Custom)|인증키|사내 IP|  
-|외부회사|None|Steven|None|WebDevAccess(Custom)|임시키|외부회사 IP|  
+|외부회사|역할|Steven|None|WebDevAccess(Custom)|모든 인증|외부회사 IP|  
 
 - 사용자 정의 정책
 
 |정책명|인증 유형|정책|  
 |:-----:|:-----:|:-----:|    
 |DBAccess|모든 인증|VPC/Firewall/Security Group 전체 허용|  
-|DeveloperAccess|인증키|Virtual Server(ceapp)전체 허용|  
-|WebDevAccess|임시키|Virtual Server(ceweb)Read/List/Update, 외부회사 IP|  
-|AccessPolicy|모든 인증|전체 허용, 사내 IP|
+|DeveloperAccess|인증키|Virtual Server(ceweb,ceapp)전체 허용|  
+|WebDevAccess|모든 인증|Virtual Server(ceweb)Read/List/Update, 외부회사 IP|  
+|NetworkAccessPolicy|모든 인증|전체 서비스/모든 자원,거부,모든 IP 적용(사내 IP 제외)|
 |AccessKeyAccess|모든 인증|Identity Access Management AccessKey액션만 허용, 사내 IP|
-
 
 ## 사용자, 사용자 그룹, 사용자 정의 정책 구성(개발자 정책)
 
@@ -140,7 +100,7 @@ curl -f -o keycloak-metadata.xml http://123.41.35.206:8080/realms/scplab/protoco
   - 서비스 : Virtual Server
   - 제어 유형 : 허용 정책
   - 액션 : Create / Delete / List / Read / Update
-  - 적용 자원 : 개별 자원 : appvm
+  - 적용 자원 : 개별 자원 : ceweb, ceapp
   - 인증 유형 : 인증키 인증
   - 적용 IP : 모든 IP
 
@@ -209,8 +169,6 @@ curl -f -o keycloak-metadata.xml http://123.41.35.206:8080/realms/scplab/protoco
 - 개발자 권한 테스트
 
 콘솔에서 인증키를 생성한 후 CLI 환경 설정에 인증키 입력
-
-CLI 다운로드 : https://docs.e.samsungsdscloud.com/clireference/cli-common/
 
 ```powershell
 edit $env:USERPROFILE\.scp\cli-config.json

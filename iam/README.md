@@ -173,7 +173,7 @@ icacls mykey.pem /inheritance:r /grant:r "$($env:USERNAME):R"
   - 사용자 : Alex, Robert
   - 정책 연결 : DeveloperAccess, NetworkAccessPolicy, AccessKeyAccess
 
-**&#128906; Alex(Developer) 콘솔**
+**&#128906; Alex(Developer) CLI**
  
 - 개발자 권한 테스트
 
@@ -224,7 +224,11 @@ scp-cli virtualserver server show --server_id webvm_자원_ID
 - DBA 사용자 그룹 연결
   - 사용자 그룹명 : `DeveloperGroup`
 
-## 역할(다른 Account)로 네트워크 엔지니어 권한 부여
+**&#128906; Scott(DBA) 콘솔**
+
+## 역할(다른 Account)로 외부 개발자 권한 부여
+
+**&#128906; Jeff(클라우드 엔지니어) 콘솔**
 
 - 외부 개발자 정책 생성
   - 정책명 : `ExternalWebDevAccess`
@@ -239,3 +243,7 @@ scp-cli virtualserver server show --server_id webvm_자원_ID
   - 최대 세션 지속시간: 2시간
   - 수행주체: 구분 : 다른 Account , Value : creative-energy
   - 정책 연결 : `ExternalWebDevAccess`
+ 
+**&#128906; Steve(외부 개발자) 콘솔**
+
+

@@ -1,6 +1,9 @@
 # Identity & Access Management
 
+## 실습 도구
+
 **&#128906; 실습 도구 설치**
+
 - 작업 디렉토리 생성
 
 ```powershell
@@ -10,15 +13,26 @@ cd c:\scpv2lab
 
 - Samsung Cloud Platform CLI 및 Terraform 환경 설정
 
+아래 파일을 다운로드해서 작업 디렉토리(C:\scpv2lab)에 저장
+
 CLI 다운로드 : https://docs.e.samsungsdscloud.com/clireference/cli-common/
 
-- Terraform 
+Terraform 다운로드 : https://developer.hashicorp.com/terraform/install
+
+## 실습 환경 배포
+
+**&#128906; Terraform 파일 다운로드** 
+
+작업 디렉토리(C:\scpv2lab)에서 Git 명령 실행
+
+```powershell
 
 
+- [main.tf](./main.tf)  
+- [variables.tf](variables.tf)  
+- [outputs.tf](outputs.tf)  
 
-## Samsung Cloud Platform 실습 환경 배포
-
-**&#128906; 사용자 변수 입력** (\advance_landingzone\iam\variables.tf)
+**&#128906; 사용자 변수 입력** (variables.tf)
 
 your_public _ip : 실습자가 사용하고 있는 PC의 Public IP 주소
 
@@ -36,7 +50,7 @@ variable "iam_account_id" {
 }
 ```
 
-**&#128906; Terraform 자원 배포 템플릿 실행** (\advance_landingzone\iam\)
+**&#128906; Terraform 자원 배포 템플릿 실행** 
 
 ```poweshell
 terraform init

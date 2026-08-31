@@ -79,8 +79,9 @@
   |:-----:|:-----:|:-----:|:-----:|:-----:|  
   |개발팀|그룹|DeveloperGroup|DeveloperAccess, AccessKeyAccessDefault, NetworkAccessPolicy||
   |운영팀|역할|NetworkEngineerRole|NetworkEngineerAccess, NetworkAccessPolicy, ConsoleAccessDefault|자격 증명 공급자로 연결|  
-  |외부회사|사용자|ExternalDeveloper|ExternalDeveloperAccess|설정 때만 AccessKeyAccessDefault, TemporaryKeySetupAccess, ConsoleAccessDefault 연결| 
-
+  |외부회사|사용자|ExternalDeveloper|ExternalDeveloperAccess*|| 
+   - *ExternalDeveloper의 Secret Vault를 구성할 때 AccessKeyAccessDefault, TemporaryKeySetupAccess, ConsoleAccessDefault 정책 임시 연결
+    
 - 사용자 정의 정책
   |정책명|인증 유형|정책|비고|  
   |:-----:|:-----:|:-----:|:-----|    

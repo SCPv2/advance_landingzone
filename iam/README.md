@@ -71,21 +71,22 @@
   |개발팀|사용자|Alex|AdministratorAccess||DeveloperGroup에 포함|   
   |개발팀|사용자|Robert|AdministratorAccess||DeveloperGroup에 포함|  
   |개발팀|사용자|Scott|AdministratorAccess|DBAccess, ConsoleAccessDefault, NetworkAccessPolicy|DeveloperGroup에 포함|  
-  |운영팀|사용자|Jeff|AdministratorAccess|AdministratorAccess, NetworkAccessPolicy|
+  |운영팀|사용자|Jeff|AdministratorAccess|AdministratorAccess, NetworkAccessPolicy||  
+  |운영팀|사용자|Lonard|AdministratorAccess||사용자를 사용하지 않고 역할(자격증명공급자)로 접근|
 
 - 신규 주체 생성
   |부서|유형|이름|기존 정책|변경 정책|비고| 
   |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|  
   |개발팀|그룹|DeveloperGroup|신규|DeveloperAccess, AccessKeyAccessDefault, NetworkAccessPolicy||
   |운영팀|역할|NetworkEngineerRole|신규|NetworkEngineerAccess, NetworkAccessPolicy, ConsoleAccessDefault|자격 증명 공급자로 연결|  
-  |외부회사|None|ExternalDeveloper|None|ExternalDeveloperAccess|설정 때만 AccessKeyAccessDefault, TemporaryKeySetupAccess, ConsoleAccessDefault 연결| 
+  |외부회사|사용자|ExternalDeveloper|None|ExternalDeveloperAccess|설정 때만 AccessKeyAccessDefault, TemporaryKeySetupAccess, ConsoleAccessDefault 연결| 
 
 - 사용자 정의 정책
   |정책명|인증 유형|정책|비고|  
   |:-----:|:-----:|:-----:|:-----|    
   |DeveloperAccess|인증키|Virtual Server(ceweb,ceapp), 모든 허용|DeveloperGroup 전용|  
-  |ExternalDeveloperAccess|모든 인증|Virtual Server(ceweb)Read/List/Update, 외부회사 IP|ExternalDeveloper 전용|
-  |DBAccess|모든 인증|PostgreSQL(cedb), 모든 허용|Scott(DBA) 전용| 
+  |ExternalDeveloperAccess|인증키|Virtual Server(ceweb)Read/List/Update, 외부회사 IP|ExternalDeveloper 전용|
+  |DBAccess|모든 인증|PostgreSQL, 모든 허용|Scott(DBA) 전용| 
   |NetworkEngineerAccess|모든 인증|VPC/Firewall/Security Group/DirectConnect, 모든 허용|Network Engineer 역할| 
   |NetworkAccessPolicy|모든 인증|전체 서비스/모든 자원,거부,모든 허용(사내 IP 제외)|사내 전직원|  
   |AccessKeyAccessDefault|모든 인증|Identity Access Management, AccessKey 액션, 모든 IP|인증키 인증 사용자|  
@@ -361,7 +362,7 @@ scp-cli vpc vpc show --vpc_id vpc_자원_ID
 
 ## 역할(자격 증명 공급자)를 통한 Console 접근(Leonard/Network Engineer)
 
-**&#128906; Jeff(Cloud Engineer) : 실습 PC**
+**&#128906; Jeff(Cloud Engineer) : CEWEB**
 
 ```powershell
 # ceweb_public_nat_ip는 CEWEB 서버의 Public NAT IP로 변경
@@ -405,7 +406,7 @@ curl.exe -f -o keycloak-metadata.xml http://ceweb_public_nat_ip:8080/realms/crea
   - 수행주체: 구분 : 자격 증명 공급자 , Value : creative-energy  
   - 정책 연결 : `NetworkEngineerAccess`,`ConsoleAccessDefault`  
 
-**&#128906; Jeff(Cloud Engineer) : 실습 PC**
+**&#128906; Jeff(Cloud Engineer) : CEWEB**
 
 ```bash
 vi idp_keycloak_config.sh
@@ -464,5 +465,10 @@ http://ceweb_public_nat_ip:8080/realms/creative-energy/protocol/saml/clients/scp
 cd c:\scpv2lab\advance_landingzone\iam\
 .\Invoke-ScpApi.ps1 -VaultId "<secretvault_id>" -TokenId "<token_id>" -TokenSecret "<token_secret>" -ServerId "<ceweb_server_id>"
 .\Invoke-ScpApi.ps1 -VaultId "<secretvault_id>" -TokenId "<token_id>" -TokenSecret "<token_secret>" -ServerId "<ceapp_server_id>"
+```
+만약 에러가 발생할 경우 아래 명령을 실행 후 다시 위 명령을 실행
+
+```poweshell
+Unblock-File .\Invoke-ScpApi.ps1
 ```
 

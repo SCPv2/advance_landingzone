@@ -74,7 +74,6 @@
   |운영팀|사용자|Jeff|AdministratorAccess|AdministratorAccess|모든 인증|사내 IP|  
 
 - 신규 주체 생성
-
   |부서|유형|이름|기존 정책|변경 정책|인증 유형|접근 IP|  
   |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|  
   |개발팀|그룹|DeveloperGroup|신규|DeveloperAccess(Custom)|인증키|사내 IP|  
@@ -82,21 +81,95 @@
   |외부회사|None|Steven|None|WebDevAccess(Custom)|임시키|외부회사 IP|  
 
 - 사용자 정의 정책
+  |정책명|인증 유형|정책|비고|  
+  |:-----:|:-----:|:-----:|:-----|    
+  |DeveloperAccess|인증키|Virtual Server(ceweb,ceapp), 모든 허용|개발 사용자 그룹|
+  |DBAccess|모든 인증|PostgreSQL(cedb), 모든 허용|DBA 사용자| 
+  |NetworkEngineerAccess|VPC/Firewall/Security Group/DirectConnect, 모든 허용|Network Engineer 역할| 
+  |WebDevAccess|모든 인증|Virtual Server(ceweb)Read/List/Update, 외부회사 IP|외부 개발자|  
+  |NetworkAccessPolicy|모든 인증|전체 서비스/모든 자원,거부,모든 허용(사내 IP 제외)|전체 회사 직원|
+  |AccessKeyAccessDefault|모든 인증|Identity Access Management, AccessKey 액션, 모든 IP|인증키 인증 사용자|
+  |ConsoleAccessDefault|모든 인증|Resource Manager Read/List, 모든 허용|콘솔 인증 사용자|
+  |TemporaryKeySetupAccess|모든 인증|Secret Vault, Identity Access Management, 모든 허용|임시키 인증 설정|
+  
 
-|정책명|인증 유형|정책|  
-|:-----:|:-----:|:-----:|    
-|DBAccess|모든 인증|VPC/Firewall/Security Group/DirectConnect 전체 허용|  
-|DeveloperAccess|인증키|Virtual Server(ceweb,ceapp)전체 허용|  
-|WebDevAccess|모든 인증|Virtual Server(ceweb)Read/List/Update, 외부회사 IP|  
-|NetworkAccessPolicy|모든 인증|전체 서비스/모든 자원,거부,모든 IP 적용(사내 IP 제외)|
-|AccessKeyAccess|모든 인증|Identity Access Management AccessKey액션만 허용, 사내 IP|
+## 정책 만들기
 
-## 사용자, 사용자 그룹, 사용자 정의 정책 구성(개발자 정책)
+- 개발팀(DeveloperGroup)용 정책 만들기
+  - 정책명 : `DeveloperAccess`
+  - 서비스 : Virtual Server
+  - 제어 유형 : 허용 정책
+  - 액션 : Create / Delete / List / Read / Update
+  - 적용 자원 : 개별 자원 : ceweb, ceapp
+  - 인증 유형 : 인증키 인증
+  - 적용 IP : 모든 IP
+
+- DBA(Scott)용 정책 만들기
+  - 정책명 : `DBAccess`
+  - 서비스 : PostgreSQL(DBaaS)
+  - 제어 유형 : 허용 정책
+  - 액션 : Create / Delete / List / Read / Update
+  - 적용 자원 : 개별 자원 : cedb
+  - 인증 유형 : 모든 인증
+  - 적용 IP : 모든 IP
+
+- Network Engineer(Leonard)용 정책 만들기
+  - 정책명 : `NetworkEngineerAccess`
+  - 권한 설정(JSON 모드)
+    ```json
+    {
+    	"Version": "2024-07-01",
+    	"Statement": [
+    		{
+    			"Sid": "VisualEditor0",
+    			"Effect": "Allow",
+    			"Action": [
+    				"vpc:*"
+    			],
+    			"Resource": [
+    				"*"
+    			]
+    		},
+    		{
+    			"Sid": "VisualEditor1",
+    			"Effect": "Allow",
+    			"Action": [
+    				"direct-connect:*"
+    			],
+    			"Resource": [
+    				"*"
+    			]
+    		},
+    		{
+    			"Sid": "VisualEditor2",
+    			"Effect": "Allow",
+    			"Action": [
+    				"firewall:*"
+    			],
+    			"Resource": [
+    				"*"
+    			]
+    		},
+    		{
+    			"Sid": "VisualEditor3",
+    			"Effect": "Allow",
+    			"Action": [
+    				"security-group:*"
+    			],
+    			"Resource": [
+    				"*"
+    			]
+    		}
+    	]
+    }
+    ```
+
+## 사용자 그룹을 생성하고 사용자, 정책을 연결하기(개발자 정책)
 
 **&#128906; Jeff(Cloud Engineer) 콘솔**
 
-- 과도하게 부여된 사용자 정책 조정  
-  IAM AdministratorAccess에서 불필요 사용자 제외
+- 최소한의 허용 원칙 적용을 위한 정책 조정  
+  IAM 정책 - AdministratorAccess - Jeff를 제외한 모든 사용자를 정책에서 제외
 
 - 개발자 정책 생성
   - 정책명 : `DeveloperAccess`

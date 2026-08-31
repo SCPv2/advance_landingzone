@@ -18,7 +18,7 @@
 
   아래 파일을 다운로드해서 작업 디렉토리(C:\scpv2lab)에 저장
   
-  CLI 다운로드 : https://docs.e.samsungsdscloud.com/clireference/cli-common/
+  CLI 다운로드 : https://docs.e.samsungsdscloud.com/clireference/cli-common/  
   Terraform 다운로드 : https://developer.hashicorp.com/terraform/install
 
 ## 실습 자원 배포

@@ -2,8 +2,6 @@
 
 ## 실습 도구
 
-**&#128906; 실습 도구 설치**
-
 - 작업 디렉토리 생성 및 작업 환경 가져오기
   ```powershell
   mkdir c:\scpv2lab
@@ -24,10 +22,9 @@
   
   Terraform 다운로드 : https://developer.hashicorp.com/terraform/install
 
-## 실습 환경 배포
+## 실습 환경 배포(Terraform)
 
-**&#128906; 사용자 변수 입력** (c:\scpv2lab\advancevariables.tf)  
- -  variables.tf 수정  
+-  variables.tf 수정  
     ```powershell
       
     edit C:\scpv2lab\advance_landingzone\iam\variables.tf
@@ -45,23 +42,22 @@
       default = "your_account_id"
     }
     ```
-
-**&#128906; Terraform 자원 배포 템플릿 실행** 
-
-```poweshell
-terraform init
-terraform validate
-terraform plan
-
-terraform apply --auto-approve
-
-# Key Pair 파일 추출 (mykey.pem)
-terraform output -raw keypair_private_key > mykey.pem 
-
-# Key Pair 파일 권한 수정
-icacls mykey.pem /inheritance:r /grant:r "$($env:USERNAME):R"
-
-```
+    
+-  Terraform 실행  
+    ```powershell
+    terraform init
+    terraform validate
+    terraform plan
+    
+    terraform apply --auto-approve
+    
+    # Key Pair 파일 추출 (mykey.pem)
+    terraform output -raw keypair_private_key > mykey.pem 
+    
+    # Key Pair 파일 권한 수정
+    icacls mykey.pem /inheritance:r /grant:r "$($env:USERNAME):R"
+    
+    ```
 
 ## 환경 및 작업 검토
 

@@ -75,11 +75,11 @@
 
 - 신규 주체 생성
 
-|부서|유형|이름|기존 정책|변경 정책|인증 유형|접근 IP|  
-|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|  
-|개발팀|그룹|DeveloperGroup|신규|DeveloperAccess(Custom)|인증키|사내 IP|  
-|외부회사|역할|Steven|None|WebDevAccess(Custom)|모든 인증|외부회사 IP|  
-|외부회사|None|Steven|None|WebDevAccess(Custom)|임시키|외부회사 IP|  
+  |부서|유형|이름|기존 정책|변경 정책|인증 유형|접근 IP|  
+  |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|  
+  |개발팀|그룹|DeveloperGroup|신규|DeveloperAccess(Custom)|인증키|사내 IP|  
+  |외부회사|역할|Steven|None|WebDevAccess(Custom)|모든 인증|외부회사 IP|  
+  |외부회사|None|Steven|None|WebDevAccess(Custom)|임시키|외부회사 IP|  
 
 - 사용자 정의 정책
 

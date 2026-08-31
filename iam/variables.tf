@@ -130,6 +130,11 @@ variable "app_service_port" {
   default = 3000
 }
 
+variable "keycloak_port" {
+  type    = number
+  default = 8080
+}
+
 ########################################################
 # Virtual Server
 ########################################################
@@ -144,7 +149,7 @@ variable "vm_web" {
     fixed_ip = string
   })
   default = {
-    name     = "webvm"
+    name     = "ceweb"
     fixed_ip = "10.0.1.11"
   }
 }
@@ -155,7 +160,7 @@ variable "vm_app" {
     fixed_ip = string
   })
   default = {
-    name     = "appvm"
+    name     = "ceapp"
     fixed_ip = "10.0.2.21"
   }
 }
@@ -260,7 +265,7 @@ variable "database_backup_option" {
 ########################################################
 variable "iam_users" {
   type    = list(string)
-  default = ["alex", "robert", "scott", "jeff", "leonard"]
+  default = ["Alex", "Robert", "Scott", "Jeff"]
 }
 
 variable "iam_root_password" {

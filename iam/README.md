@@ -66,27 +66,27 @@
 **&#128906; 사용자 및 정책 구성 목표**
 
 - 기존 주체 수정
-  |부서|유형|이름|기존 정책|변경 정책|인증 유형|접근 IP|  
-  |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|   
-  |개발팀|사용자|Alex|AdministratorAccess||||   
-  |개발팀|사용자|Robert|AdministratorAccess||||  
-  |개발팀|사용자|Scott|AdministratorAccess|DBAccess(Custom)|모든 인증|사내 IP|  
-  |운영팀|사용자|Jeff|AdministratorAccess|AdministratorAccess|모든 인증|사내 IP|  
+  |부서|유형|이름|기존 정책|변경 정책|비고|  
+  |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|   
+  |개발팀|사용자|Alex|AdministratorAccess||DeveloperGroup에 포함|   
+  |개발팀|사용자|Robert|AdministratorAccess||DeveloperGroup에 포함|  
+  |개발팀|사용자|Scott|AdministratorAccess|DBAccess, ConsoleAccessDefault, NetworkAccessPolicy|DeveloperGroup에 포함|  
+  |운영팀|사용자|Jeff|AdministratorAccess|AdministratorAccess, NetworkAccessPolicy|
 
 - 신규 주체 생성
-  |부서|유형|이름|기존 정책|변경 정책|인증 유형|접근 IP|  
-  |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|  
-  |개발팀|그룹|DeveloperGroup|신규|DeveloperAccess(Custom)|인증키|사내 IP|  
-  |외부회사|역할|Steven|None|WebDevAccess(Custom)|모든 인증|외부회사 IP|  
-  |외부회사|None|Steven|None|WebDevAccess(Custom)|임시키|외부회사 IP|  
+  |부서|유형|이름|기존 정책|변경 정책|비고|  |  
+  |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|  
+  |개발팀|그룹|DeveloperGroup|신규|DeveloperAccess, AccessKeyAccessDefault, NetworkAccessPolicy||
+  |운영팀|역할|NetworkEngineerRole|신규|NetworkEngineerAccess, NetworkAccessPolicy, ConsoleAccessDefault|자격 증명 공급자로 연결|  
+  |외부회사|None|ExternalDeveloper|None|ExternalDeveloperAccess|설정 때만 AccessKeyAccessDefault, TemporaryKeySetupAccess, ConsoleAccessDefault 연결| 
 
 - 사용자 정의 정책
   |정책명|인증 유형|정책|비고|  
   |:-----:|:-----:|:-----:|:-----|    
-  |DeveloperAccess|인증키|Virtual Server(ceweb,ceapp), 모든 허용|개발 사용자 그룹|  
-  |ExternalDeveloperAccess|모든 인증|Virtual Server(ceweb)Read/List/Update, 외부회사 IP|외부 개발자|
-  |DBAccess|모든 인증|PostgreSQL(cedb), 모든 허용|DBA 사용자| 
-  |NetworkEngineerAccess|VPC/Firewall/Security Group/DirectConnect, 모든 허용|Network Engineer 역할| 
+  |DeveloperAccess|인증키|Virtual Server(ceweb,ceapp), 모든 허용|DeveloperGroup 전용|  
+  |ExternalDeveloperAccess|모든 인증|Virtual Server(ceweb)Read/List/Update, 외부회사 IP|ExternalDeveloper 전용|
+  |DBAccess|모든 인증|PostgreSQL(cedb), 모든 허용|Scott(DBA) 전용| 
+  |NetworkEngineerAccess|모든 인증|VPC/Firewall/Security Group/DirectConnect, 모든 허용|Network Engineer 역할| 
   |NetworkAccessPolicy|모든 인증|전체 서비스/모든 자원,거부,모든 허용(사내 IP 제외)|전체 회사 직원|  
   |AccessKeyAccessDefault|모든 인증|Identity Access Management, AccessKey 액션, 모든 IP|인증키 인증 사용자|  
   |ConsoleAccessDefault|모든 인증|Resource Manager Read/List, 모든 허용|Console 인증 사용자|  
@@ -302,7 +302,7 @@
   IAM 정책 - AdministratorAccess - Jeff를 제외한 모든 사용자를 정책에서 제외
 
 - 사용자 그룹 생성
-  - 사용자 그룹명 : `devloperGroup`
+  - 사용자 그룹명 : `DevloperGroup`
   - 사용자 : Alex, Robert
   - 정책 연결 : DeveloperAccess, NetworkAccessPolicy, AccessKeyAccessDefault
 
@@ -323,7 +323,8 @@ edit $env:USERPROFILE\.scp\cli-config.json
      "auth_url": "https://iam.e.samsungsdscloud.com/v1/endpoints",
      "access_key": "인증키 access-key 입력",
      "access_secret_key": "인증키 access-secret-key 입력",
-     "default_scp_region": "kr
+     "default_scp_region": "kr-west1"
+}
 ```
 
 -  개발자 권한으로 CLI 실행
@@ -364,7 +365,7 @@ scp-cli vpc vpc show --vpc_id vpc_자원_ID
 
 ```powershell
 # ceweb_public_nat_ip는 CEWEB 서버의 Public NAT IP로 변경
-ssh -i mykey.pem rocky@ceweb__public_nat_ip 
+ssh -i mykey.pem rocky@ceweb_public_nat_ip 
 ```
 ```bash
 vi idp_keycloak_install.sh
@@ -437,7 +438,7 @@ http://ceweb_public_nat_ip:8080/realms/creative-energy/protocol/saml/clients/scp
 
 - 사용자 생성
   - 사용자명: `ExternalDeveloper`
-  - 정책 연결: `ExternalDeveloperAccess`,`AccessKeyAccess`,`TemporaryKeySetupAccess`
+  - 정책 연결: `ExternalDeveloperAccess`,`AccessKeyAccessDefault`,`TemporaryKeySetupAccess`
 
 **&#128906; ExternalDeveloper Console**
 

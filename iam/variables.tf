@@ -265,7 +265,7 @@ variable "database_backup_option" {
 ########################################################
 variable "iam_users" {
   type    = list(string)
-  default = ["Alex", "Robert", "Scott", "Jeff"]
+  default = ["Alex", "Robert", "Scott", "Jeff", "Leonard"]
 }
 
 variable "iam_root_password" {

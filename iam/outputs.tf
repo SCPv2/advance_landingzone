@@ -72,6 +72,7 @@ output "virtual_server_info" {
       subnet       = "websubnet"
       private_ip   = var.vm_web.fixed_ip
       public_ip_id = samsungcloudplatformv2_vpc_publicip.web.id
+      public_ip    = samsungcloudplatformv2_vpc_publicip.web.publicip.ip_address
     }
     appvm = {
       id         = samsungcloudplatformv2_virtualserver_server.appvm.id

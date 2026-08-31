@@ -19,7 +19,7 @@ provider "samsungcloudplatformv2" {
 }
 
 ########################################################
-# VPC (VPC1, 10.0.0.0/16)
+# VPC (ceVPC, 10.0.0.0/16)
 ########################################################
 resource "samsungcloudplatformv2_vpc_vpc" "vpc1" {
   name        = var.vpc_name
@@ -84,7 +84,7 @@ resource "samsungcloudplatformv2_vpc_subnet" "dbsubnet" {
 }
 
 ########################################################
-# Public IP (webvm)
+# Public IP (ceweb)
 ########################################################
 resource "samsungcloudplatformv2_vpc_publicip" "web" {
   type        = var.internet_gateway_type
@@ -194,7 +194,7 @@ locals {
 }
 
 ########################################################
-# Virtual Server : webvm (websubnet, Public IP)
+# Virtual Server : ceweb (websubnet, Public IP)
 ########################################################
 resource "samsungcloudplatformv2_virtualserver_server" "webvm" {
   name           = var.vm_web.name
@@ -229,7 +229,7 @@ resource "samsungcloudplatformv2_virtualserver_server" "webvm" {
 }
 
 ########################################################
-# Virtual Server : appvm (appsubnet, Private)
+# Virtual Server : ceapp (appsubnet, Private)
 ########################################################
 resource "samsungcloudplatformv2_virtualserver_server" "appvm" {
   name           = var.vm_app.name

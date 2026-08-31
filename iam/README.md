@@ -75,11 +75,11 @@
   |운영팀|사용자|Lonard|AdministratorAccess||사용자를 사용하지 않고 역할(자격증명공급자)로 접근|
 
 - 신규 주체 생성
-  |부서|유형|이름|기존 정책|변경 정책|비고| 
-  |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|  
-  |개발팀|그룹|DeveloperGroup|신규|DeveloperAccess, AccessKeyAccessDefault, NetworkAccessPolicy||
-  |운영팀|역할|NetworkEngineerRole|신규|NetworkEngineerAccess, NetworkAccessPolicy, ConsoleAccessDefault|자격 증명 공급자로 연결|  
-  |외부회사|사용자|ExternalDeveloper|None|ExternalDeveloperAccess|설정 때만 AccessKeyAccessDefault, TemporaryKeySetupAccess, ConsoleAccessDefault 연결| 
+  |부서|유형|이름|정책|비고| 
+  |:-----:|:-----:|:-----:|:-----:|:-----:|  
+  |개발팀|그룹|DeveloperGroup|DeveloperAccess, AccessKeyAccessDefault, NetworkAccessPolicy||
+  |운영팀|역할|NetworkEngineerRole|NetworkEngineerAccess, NetworkAccessPolicy, ConsoleAccessDefault|자격 증명 공급자로 연결|  
+  |외부회사|사용자|ExternalDeveloper|ExternalDeveloperAccess|설정 때만 AccessKeyAccessDefault, TemporaryKeySetupAccess, ConsoleAccessDefault 연결| 
 
 - 사용자 정의 정책
   |정책명|인증 유형|정책|비고|  

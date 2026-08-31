@@ -1,6 +1,6 @@
 # Identity & Access Management
 
-## 실습 도구
+## 실습 환경 구성
 
 - 작업 디렉토리 생성 및 작업 환경 가져오기
   ```powershell
@@ -19,32 +19,31 @@
   아래 파일을 다운로드해서 작업 디렉토리(C:\scpv2lab)에 저장
   
   CLI 다운로드 : https://docs.e.samsungsdscloud.com/clireference/cli-common/
-  
   Terraform 다운로드 : https://developer.hashicorp.com/terraform/install
 
-## 실습 환경 배포(Terraform)
+## 실습 자원 배포
 
 -  variables.tf 수정  
     ```powershell
-      
     edit C:\scpv2lab\advance_landingzone\iam\variables.tf
     ```
-    your_public _ip : 실습자가 사용하고 있는 PC의 Public IP 주소  
-    your_account_id : 실습자가 접속하고 있는 Samsung Cloud Platform의 Account ID
-    ```hcl
+
+   ```hcl
     variable "user_public_ip" {
       type    = string
-      default = "your_public_ip"
+      default = "your_public_ip" # 실습자가 사용하고 있는 PC의 Public IP 주소로 변경
     }
     
     variable "iam_account_id" {
       type    = string
-      default = "your_account_id"
+      default = "your_account_id" # 실습자가 접속하고 있는 Samsung Cloud Platform의 Account ID로 변경
     }
     ```
     
 -  Terraform 실행  
     ```powershell
+    cd c:\scpv2lab\advance_landingzone\iam\
+    
     terraform init
     terraform validate
     terraform plan
@@ -56,10 +55,9 @@
     
     # Key Pair 파일 권한 수정
     icacls mykey.pem /inheritance:r /grant:r "$($env:USERNAME):R"
-    
     ```
 
-## 환경 및 작업 검토
+## 환경 검토
 
 - Architecture Diagram 검토
 
@@ -68,13 +66,12 @@
 **&#128906; 사용자 및 정책 구성 목표**
 
 - 기존 주체 수정
-  
-|부서|유형|이름|기존 정책|변경 정책|인증 유형|접근 IP|  
-|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|   
-|개발팀|사용자|Alex|AdministratorAccess||||   
-|개발팀|사용자|Robert|AdministratorAccess||||  
-|개발팀|사용자|Scott|AdministratorAccess|DBAccess(Custom)|모든 인증|사내 IP|  
-|운영팀|사용자|Jeff|AdministratorAccess|AdministratorAccess|모든 인증|사내 IP|  
+  |부서|유형|이름|기존 정책|변경 정책|인증 유형|접근 IP|  
+  |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|   
+  |개발팀|사용자|Alex|AdministratorAccess||||   
+  |개발팀|사용자|Robert|AdministratorAccess||||  
+  |개발팀|사용자|Scott|AdministratorAccess|DBAccess(Custom)|모든 인증|사내 IP|  
+  |운영팀|사용자|Jeff|AdministratorAccess|AdministratorAccess|모든 인증|사내 IP|  
 
 - 신규 주체 생성
 
@@ -82,6 +79,7 @@
 |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|  
 |개발팀|그룹|DeveloperGroup|신규|DeveloperAccess(Custom)|인증키|사내 IP|  
 |외부회사|역할|Steven|None|WebDevAccess(Custom)|모든 인증|외부회사 IP|  
+|외부회사|None|Steven|None|WebDevAccess(Custom)|임시키|외부회사 IP|  
 
 - 사용자 정의 정책
 

@@ -116,79 +116,7 @@
   - 적용 자원 : 개별 자원 : ceweb
   - 인증 유형 : 인증키 인증
   - 적용 IP : 실습 PC Public IP(외부회사 IP)
- 
-- DBA(Scott)용 정책 만들기
-  - 정책명 : `DBAccess`
-  - 권한 설정(JSON 모드)
-    ```json
-    {
-    	"Statement": [
-    		{
-    			"Action": [
-    				"postgresql:*"
-    			],
-    			"Effect": "Allow",
-    			"Resource": [
-    				"*"
-    			],
-    			"Sid": "Database"
-    		}
-    	],
-    	"Version": "2024-07-01"
-    }
-    ```
 
-- Network Engineer(Leonard)용 정책 만들기
-  - 정책명 : `NetworkEngineerAccess`
-  - 권한 설정(JSON 모드)
-    ```json
-    {
-    	"Version": "2024-07-01",
-    	"Statement": [
-    		{
-    			"Sid": "VPC",
-    			"Effect": "Allow",
-    			"Action": [
-    				"vpc:*"
-    			],
-    			"Resource": [
-    				"*"
-    			]
-    		},
-    		{
-    			"Sid": "DirectConnect",
-    			"Effect": "Allow",
-    			"Action": [
-    				"direct-connect:*"
-    			],
-    			"Resource": [
-    				"*"
-    			]
-    		},
-    		{
-    			"Sid": "Firewall",
-    			"Effect": "Allow",
-    			"Action": [
-    				"firewall:*"
-    			],
-    			"Resource": [
-    				"*"
-    			]
-    		},
-    		{
-    			"Sid": "SecurityGroup",
-    			"Effect": "Allow",
-    			"Action": [
-    				"security-group:*"
-    			],
-    			"Resource": [
-    				"*"
-    			]
-    		}
-    	]
-    }
-    ```
-    
 - 사내 IP에서만 접근하게 하는 정책(사내 직원 공통)
   - 정책명 : `NetworkAccessPolicy`
   - 권한 설정(JSON 모드)
@@ -217,84 +145,50 @@
     }
     ```
 
-- 인증키 인증 유형 정책과 함께 적용하는 정책
-  - 정책명 : `AccessKeyAccessDefault`
-  - 권한 설정(JSON 모드)
-    ```json
-    {
-    	"Statement": [
-    		{
-    			"Action": [
-    				"iam:CreateAccessKey",
-    				"iam:DeleteAccessKey",
-    				"iam:ListAccessKeys",
-    				"iam:ShowAccessKey",
-    				"iam:SetAccessKey",
-    				"iam:ListEndpoints"
-    			],
-    			"Effect": "Allow",
-    			"Resource": [
-    				"*"
-    			],
-    			"Sid": "AccessKey"
-    		}
-    	],
-    	"Version": "2024-07-01"
-    }
-    ```
+**&#128906; Jeff(Cloud Engineer) CLI**
 
-- Console 인증 유형 정책과 함께 적용하는 정책
-  - 정책명 : `ConsoleAccessDefault`
-  - 권한 설정(JSON 모드)
-    ```json
-    {
-    	"Version": "2024-07-01",
-    	"Statement": [
-    		{
-    			"Sid": "ConsoleUserAccess",
-    			"Effect": "Allow",
-    			"Action": [
-    				"resourcemanager:List*",
-    				"resourcemanager:Show*"
-    			],
-    			"Resource": [
-    				"*"
-    			]
-    		}
-    	]
-    }
-    ```
+  ```powershell
+  edit $env:USERPROFILE\.scp\cli-config.json 
+  ```
+  ```json
+  {
+       "auth_url": "https://iam.e.samsungsdscloud.com/v1/endpoints",
+       "access_key": "Jeff의 인증키 access-key 입력",
+       "access_secret_key": "Jeff의 인증키 access-secret-key 입력",
+       "default_scp_region": "kr-west1"
+  }
+  ```
+ 
+- DBA(Scott)용 정책(DBAccess) 만들기
 
-- 임시키 설정을 위한 정책
-  - 정책명 : `TemporaryKeySetupAccess`
-  - 권한 설정(JSON 모드)
-    ```json
-    {
-    	"Statement": [
-    		{
-    			"Action": [
-    				"secretvault:*"
-    			],
-    			"Effect": "Allow",
-    			"Resource": [
-    				"*"
-    			],
-    			"Sid": "SecretVault"
-    		},
-    		{
-    			"Action": [
-    				"iam:*"
-    			],
-    			"Effect": "Allow",
-    			"Resource": [
-    				"*"
-    			],
-    			"Sid": "IAM"
-    		}
-    	],
-    	"Version": "2024-07-01"
-    }
-    ```
+  ```powershell
+  cd C:\scpv2lab\advance_landingzone\iam\
+  $p='DBAccess'; $d=Get-Content "$p.json" -Raw | ConvertFrom-Json; $a=@('iam','policy','create','--policy_name',$p,'--version',$d.Version); foreach($s in @($d.Statement)){ $a+='--statement'; $a+=($s | ConvertTo-Json -Depth 10 -Compress) }; & scp-cli @a
+  ```
+
+- Network Engineer(Leonard)용 정책(NetworkEngineerAccess) 만들기
+  ```powershell
+  cd C:\scpv2lab\advance_landingzone\iam\
+  $p='NetworkEngineerAccess'; $d=Get-Content "$p.json" -Raw | ConvertFrom-Json; $a=@('iam','policy','create','--policy_name',$p,'--version',$d.Version); foreach($s in @($d.Statement)){ $a+='--statement'; $a+=($s | ConvertTo-Json -Depth 10 -Compress) }; & scp-cli @a
+  ```
+  
+- 인증키 인증 유형 정책과 함께 적용하는 정책(AccessKeyAccessDefault) 만들기
+  ```powershell
+  cd C:\scpv2lab\advance_landingzone\iam\
+  $p='AccessKeyAccessDefault'; $d=Get-Content "$p.json" -Raw | ConvertFrom-Json; $a=@('iam','policy','create','--policy_name',$p,'--version',$d.Version); foreach($s in @($d.Statement)){ $a+='--statement'; $a+=($s | ConvertTo-Json -Depth 10 -Compress) }; & scp-cli @a
+  ```
+
+- Console 인증 유형 정책과 함께 적용하는 정책(ConsoleAccessDefault) 만들기
+  ```powershell
+  cd C:\scpv2lab\advance_landingzone\iam\
+  $p='ConsoleAccessDefault'; $d=Get-Content "$p.json" -Raw | ConvertFrom-Json; $a=@('iam','policy','create','--policy_name',$p,'--version',$d.Version); foreach($s in @($d.Statement)){ $a+='--statement'; $a+=($s | ConvertTo-Json -Depth 10 -Compress) }; & scp-cli @a
+  ```
+  
+- 임시키 설정을 위한 정책(TemporaryKeySetupAccess) 만들기
+  ```powershell
+  cd C:\scpv2lab\advance_landingzone\iam\
+  $p='TemporaryKeySetupAccess'; $d=Get-Content "$p.json" -Raw | ConvertFrom-Json; $a=@('iam','policy','create','--policy_name',$p,'--version',$d.Version); foreach($s in @($d.Statement)){ $a+='--statement'; $a+=($s | ConvertTo-Json -Depth 10 -Compress) }; & scp-cli @a
+  ```
 
 ## 사용자 그룹 생성 및 사용자 연결
 
@@ -323,8 +217,8 @@ edit $env:USERPROFILE\.scp\cli-config.json
 ```json
 {
      "auth_url": "https://iam.e.samsungsdscloud.com/v1/endpoints",
-     "access_key": "인증키 access-key 입력",
-     "access_secret_key": "인증키 access-secret-key 입력",
+     "access_key": "Alex의 인증키 access-key 입력",
+     "access_secret_key": "Alex의 인증키 access-secret-key 입력",
      "default_scp_region": "kr-west1"
 }
 ```

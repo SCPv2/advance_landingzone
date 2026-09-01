@@ -27,6 +27,10 @@
   CLI 다운로드 : https://docs.e.samsungsdscloud.com/clireference/cli-common/  
   Terraform 다운로드 : https://developer.hashicorp.com/terraform/install
 
+  Terraform 환경 설정
+
+  [Terraform을 통한 인프라 운영 자동화](https://github.com/SCPv2/advance_iac/tree/main/terraform) 참조
+
 ## 실습 자원 배포
 
 -  variables.tf 수정  

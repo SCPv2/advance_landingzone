@@ -107,6 +107,8 @@
 
 **&#128906; Jeff(Cloud Engineer) Console**
 
+- Changeit1!
+
 - 개발팀(DeveloperGroup)용 정책 만들기
   - 정책명 : `DeveloperAccess`
   - 서비스 : Virtual Server
@@ -153,15 +155,15 @@
     }
     ```
  
-- DBA(Scott)용 정책([DBAccess](./DBAccess.json)) 만들기
+- DBA(Scott)용 정책([DBAccess](./policy/DBAccess.json)) 만들기
 
-- Network Engineer(Leonard)용 정책([NetworkEngineerAccess](./NetworkEngineerAccess.json)) 만들기
+- Network Engineer(Leonard)용 정책([NetworkEngineerAccess](./policy/NetworkEngineerAccess.json)) 만들기
   
-- 인증키 인증 유형 정책과 함께 적용하는 정책([AccessKeyAccessDefault](AccessKeyAccessDefault.json)) 만들기
+- 인증키 인증 유형 정책과 함께 적용하는 정책([AccessKeyAccessDefault](./policy/AccessKeyAccessDefault.json)) 만들기
 
-- Console 인증 유형 정책과 함께 적용하는 정책([ConsoleAccessDefault](ConsoleAccessDefault.json)) 만들기
+- Console 인증 유형 정책과 함께 적용하는 정책([ConsoleAccessDefault](./policy/ConsoleAccessDefault.json)) 만들기
   
-- 임시키 설정을 위한 정책([TemporaryKeySetupAccess](TemporaryKeySetupAccess.json)) 만들기
+- 임시키 설정을 위한 정책([TemporaryKeySetupAccess](./policy/TemporaryKeySetupAccess.json)) 만들기
 
 
 ## 사용자 그룹 생성 및 사용자 연결
@@ -240,7 +242,7 @@ ssh -i mykey.pem rocky@ceweb_public_nat_ip
 ```bash
 vi idp_keycloak_install.sh
 ```
-[Keycloak 설치 스크립트](./idp_keycloak_install.sh)를 Copy & Paste
+[Keycloak 설치 스크립트](./idp/idp_keycloak_install.sh)를 Copy & Paste
 
 ```bash
 chmod +x idp_keycloak_install.sh
@@ -280,7 +282,7 @@ curl.exe -f -o keycloak-metadata.xml http://ceweb_public_nat_ip:8080/realms/crea
 ```bash
 vi idp_keycloak_config.sh
 ```
-[Keycloak 설정 스크립트](./idp_keycloak_config.sh)를 Copy & Paste
+[Keycloak 설정 스크립트](./idp/idp_keycloak_config.sh)를 Copy & Paste
 
 ```bash
 chmod +x idp_keycloak_config.sh

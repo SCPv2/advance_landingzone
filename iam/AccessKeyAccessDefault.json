@@ -1,0 +1,20 @@
+{
+  "Version": "2024-07-01",
+  "Statement": [
+    {
+      "Sid": "AccessKey",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateAccessKey",
+        "iam:DeleteAccessKey",
+        "iam:ListAccessKeys",
+        "iam:ShowAccessKey",
+        "iam:SetAccessKey",
+        "iam:ListEndpoints"
+      ],
+      "Resource": [
+        "*"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "Version": "2024-07-01",
+  "Statement": [
+    {
+      "Sid": "SecretVault",
+      "Effect": "Allow",
+      "Action": [
+        "secretvault:*"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Sid": "IAM",
+      "Effect": "Allow",
+      "Action": [
+        "iam:*"
+      ],
+      "Resource": [
+        "*"
+      ]
+    }
+  ]
+}

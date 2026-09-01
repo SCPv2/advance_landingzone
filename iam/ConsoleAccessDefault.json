@@ -1,0 +1,16 @@
+{
+  "Version": "2024-07-01",
+  "Statement": [
+    {
+      "Sid": "ConsoleUserAccess",
+      "Effect": "Allow",
+      "Action": [
+        "resourcemanager:List*",
+        "resourcemanager:Show*"
+      ],
+      "Resource": [
+        "*"
+      ]
+    }
+  ]
+}

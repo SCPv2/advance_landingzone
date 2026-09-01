@@ -1,0 +1,15 @@
+{
+  "Version": "2024-07-01",
+  "Statement": [
+    {
+      "Sid": "Database",
+      "Effect": "Allow",
+      "Action": [
+        "postgresql:*"
+      ],
+      "Resource": [
+        "*"
+      ]
+    }
+  ]
+}

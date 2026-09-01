@@ -3,14 +3,20 @@
 ## 실습 환경 구성
 
 - 작업 디렉토리 생성 및 작업 환경 가져오기
+
+  작업 디렉토리 만들기
   ```powershell
   mkdir c:\scpv2lab
   cd c:\scpv2lab
-  
-  # c:\scpv2lab을 사용자 PATH에 등록
+  ```
+
+  c:\scpv2lab을 사용자 PATH에 등록
+  ```powershell
   $d='C:\scpv2lab'; $p=[Environment]::GetEnvironmentVariable('Path','User'); if($p -split ';' -notcontains $d){[Environment]::SetEnvironmentVariable('Path',($p.TrimEnd(';')+';'+$d),'User')}; $env:Path+=";$d"
-  
-  # Advance LandingZone 실습 챕터 실습 파일 가져오기
+  ```
+
+  Advance LandingZone 실습 챕터 실습 파일 가져오기
+  ```powershell
   git clone https://github.com/SCPv2/advance_landingzone.git
   ```
 

@@ -152,51 +152,17 @@
     	"Version": "2024-07-01"
     }
     ```
-
-**&#128906; Jeff(Cloud Engineer) CLI**
-
-  ```powershell
-  edit $env:USERPROFILE\.scp\cli-config.json 
-  ```
-  ```json
-  {
-       "auth_url": "https://iam.e.samsungsdscloud.com/v1/endpoints",
-       "access_key": "Jeff의 인증키 access-key 입력",
-       "access_secret_key": "Jeff의 인증키 access-secret-key 입력",
-       "default_scp_region": "kr-west1"
-  }
-  ```
  
-- DBA(Scott)용 정책(DBAccess) 만들기
+- DBA(Scott)용 정책([DBAccess](./DBAccess.json)) 만들기
 
-  ```powershell
-  cd C:\scpv2lab\advance_landingzone\iam\
-  $p='DBAccess'; $d=Get-Content "$p.json" -Raw | ConvertFrom-Json; $a=@('iam','policy','create','--policy_name',$p,'--version',$d.Version); foreach($s in @($d.Statement)){ $a+='--statement'; $a+=($s | ConvertTo-Json -Depth 10 -Compress) }; & scp-cli @a
-  ```
-
-- Network Engineer(Leonard)용 정책(NetworkEngineerAccess) 만들기
-  ```powershell
-  cd C:\scpv2lab\advance_landingzone\iam\
-  $p='NetworkEngineerAccess'; $d=Get-Content "$p.json" -Raw | ConvertFrom-Json; $a=@('iam','policy','create','--policy_name',$p,'--version',$d.Version); foreach($s in @($d.Statement)){ $a+='--statement'; $a+=($s | ConvertTo-Json -Depth 10 -Compress) }; & scp-cli @a
-  ```
+- Network Engineer(Leonard)용 정책([NetworkEngineerAccess](./NetworkEngineerAccess.json)) 만들기
   
-- 인증키 인증 유형 정책과 함께 적용하는 정책(AccessKeyAccessDefault) 만들기
-  ```powershell
-  cd C:\scpv2lab\advance_landingzone\iam\
-  $p='AccessKeyAccessDefault'; $d=Get-Content "$p.json" -Raw | ConvertFrom-Json; $a=@('iam','policy','create','--policy_name',$p,'--version',$d.Version); foreach($s in @($d.Statement)){ $a+='--statement'; $a+=($s | ConvertTo-Json -Depth 10 -Compress) }; & scp-cli @a
-  ```
+- 인증키 인증 유형 정책과 함께 적용하는 정책([AccessKeyAccessDefault](AccessKeyAccessDefault.json)) 만들기
 
-- Console 인증 유형 정책과 함께 적용하는 정책(ConsoleAccessDefault) 만들기
-  ```powershell
-  cd C:\scpv2lab\advance_landingzone\iam\
-  $p='ConsoleAccessDefault'; $d=Get-Content "$p.json" -Raw | ConvertFrom-Json; $a=@('iam','policy','create','--policy_name',$p,'--version',$d.Version); foreach($s in @($d.Statement)){ $a+='--statement'; $a+=($s | ConvertTo-Json -Depth 10 -Compress) }; & scp-cli @a
-  ```
+- Console 인증 유형 정책과 함께 적용하는 정책([ConsoleAccessDefault](ConsoleAccessDefault.json)) 만들기
   
-- 임시키 설정을 위한 정책(TemporaryKeySetupAccess) 만들기
-  ```powershell
-  cd C:\scpv2lab\advance_landingzone\iam\
-  $p='TemporaryKeySetupAccess'; $d=Get-Content "$p.json" -Raw | ConvertFrom-Json; $a=@('iam','policy','create','--policy_name',$p,'--version',$d.Version); foreach($s in @($d.Statement)){ $a+='--statement'; $a+=($s | ConvertTo-Json -Depth 10 -Compress) }; & scp-cli @a
-  ```
+- 임시키 설정을 위한 정책([TemporaryKeySetupAccess](TemporaryKeySetupAccess.json)) 만들기
+
 
 ## 사용자 그룹 생성 및 사용자 연결
 

@@ -131,7 +131,7 @@
     			"Resource": [
     				"*"
     			],
-    			"Sid": "VisualEditor0"
+    			"Sid": "Database"
     		}
     	],
     	"Version": "2024-07-01"
@@ -146,7 +146,7 @@
     	"Version": "2024-07-01",
     	"Statement": [
     		{
-    			"Sid": "VisualEditor0",
+    			"Sid": "VPC",
     			"Effect": "Allow",
     			"Action": [
     				"vpc:*"
@@ -156,7 +156,7 @@
     			]
     		},
     		{
-    			"Sid": "VisualEditor1",
+    			"Sid": "DirectConnect",
     			"Effect": "Allow",
     			"Action": [
     				"direct-connect:*"
@@ -166,7 +166,7 @@
     			]
     		},
     		{
-    			"Sid": "VisualEditor2",
+    			"Sid": "Firewall",
     			"Effect": "Allow",
     			"Action": [
     				"firewall:*"
@@ -176,7 +176,7 @@
     			]
     		},
     		{
-    			"Sid": "VisualEditor3",
+    			"Sid": "SecurityGroup",
     			"Effect": "Allow",
     			"Action": [
     				"security-group:*"
@@ -210,7 +210,7 @@
     			"Resource": [
     				"*"
     			],
-    			"Sid": "statement1"
+    			"Sid": "NetworkAccessControl"
     		}
     	],
     	"Version": "2024-07-01"
@@ -251,7 +251,7 @@
     	"Version": "2024-07-01",
     	"Statement": [
     		{
-    			"Sid": "VisualEditor0",
+    			"Sid": "ConsoleUserAccess",
     			"Effect": "Allow",
     			"Action": [
     				"resourcemanager:List*",
@@ -279,7 +279,7 @@
     			"Resource": [
     				"*"
     			],
-    			"Sid": "VisualEditor0"
+    			"Sid": "SecretVault"
     		},
     		{
     			"Action": [
@@ -289,7 +289,7 @@
     			"Resource": [
     				"*"
     			],
-    			"Sid": "VisualEditor1"
+    			"Sid": "IAM"
     		}
     	],
     	"Version": "2024-07-01"

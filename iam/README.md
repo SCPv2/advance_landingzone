@@ -156,7 +156,7 @@
 **&#128906; Jeff(Cloud Engineer) CLI**
 
   ```powershell
-  edit $env:USERPROFILE\.scp\cli-config.json 
+  edit $env:USERPROFILE\.scp\config.json 
   ```
   ```json
   {

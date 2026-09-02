@@ -73,6 +73,18 @@
 
 **&#128906; 사용자 및 정책 구성 목표**
 
+- 사용자 정의 정책
+  |정책명|인증 유형|정책|비고|  
+  |:-----:|:-----:|:-----:|:-----|    
+  |DeveloperAccess|인증키|Virtual Server(ceweb,ceapp), 모든 허용|DeveloperGroup 전용|  
+  |ExternalDeveloperAccess|인증키|Virtual Server(ceweb)Read/List/Update, 외부회사 IP|ExternalDeveloper 전용|
+  |DBAccess|모든 인증|PostgreSQL, 모든 허용|Scott(DBA) 전용| 
+  |NetworkEngineerAccess|모든 인증|VPC/Firewall/Security Group/DirectConnect, 모든 허용|Network Engineer 역할| 
+  |NetworkAccessPolicy|모든 인증|전체 서비스/모든 자원,거부,모든 허용(사내 IP 제외)|사내 전직원|  
+  |AccessKeyAccessDefault|모든 인증|Identity Access Management, AccessKey 액션, 모든 IP|인증키 인증 사용자|  
+  |ConsoleAccessDefault|모든 인증|Resource Manager Read/List, 모든 허용|Console 인증 사용자|  
+  |TemporaryKeySetupAccess|모든 인증|Secret Vault, Identity Access Management, 모든 허용|임시키 인증 설정용|  
+
 - 기존 주체 수정
   |부서|유형|이름|기존 정책|변경 정책|비고|  
   |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|   
@@ -89,19 +101,7 @@
   |운영팀|역할|NetworkEngineerRole|NetworkEngineerAccess, NetworkAccessPolicy, ConsoleAccessDefault|자격 증명 공급자로 연결|  
   |외부회사|사용자|ExternalDeveloper|ExternalDeveloperAccess*|| 
    - *ExternalDeveloper의 Secret Vault를 구성할 때 AccessKeyAccessDefault, TemporaryKeySetupAccess, ConsoleAccessDefault 정책 임시 연결
-    
-- 사용자 정의 정책
-  |정책명|인증 유형|정책|비고|  
-  |:-----:|:-----:|:-----:|:-----|    
-  |DeveloperAccess|인증키|Virtual Server(ceweb,ceapp), 모든 허용|DeveloperGroup 전용|  
-  |ExternalDeveloperAccess|인증키|Virtual Server(ceweb)Read/List/Update, 외부회사 IP|ExternalDeveloper 전용|
-  |DBAccess|모든 인증|PostgreSQL, 모든 허용|Scott(DBA) 전용| 
-  |NetworkEngineerAccess|모든 인증|VPC/Firewall/Security Group/DirectConnect, 모든 허용|Network Engineer 역할| 
-  |NetworkAccessPolicy|모든 인증|전체 서비스/모든 자원,거부,모든 허용(사내 IP 제외)|사내 전직원|  
-  |AccessKeyAccessDefault|모든 인증|Identity Access Management, AccessKey 액션, 모든 IP|인증키 인증 사용자|  
-  |ConsoleAccessDefault|모든 인증|Resource Manager Read/List, 모든 허용|Console 인증 사용자|  
-  |TemporaryKeySetupAccess|모든 인증|Secret Vault, Identity Access Management, 모든 허용|임시키 인증 설정용|  
-  
+   
 
 ## 정책 만들기
 

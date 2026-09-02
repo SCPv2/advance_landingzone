@@ -36,7 +36,7 @@
     edit C:\scpv2lab\advance_landingzone\iam\variables.tf
     ```
 
-   ```hcl
+    ```hcl
     variable "user_public_ip" {
       type    = string
       default = "your_public_ip" # 실습 PC의 Public IP 주소로 변경
@@ -45,6 +45,11 @@
     variable "iam_account_id" {
       type    = string
       default = "your_account_id" # 실습자가 사용하고 있는 Samsung Cloud Platform의 Account ID로 변경
+    }
+
+    variable "iam_root_password" {
+      type    = string
+      default = "iam_user_password" # 사용자 비밀번호를 임의로 지정해서 변경
     }
     ```
     

@@ -107,8 +107,6 @@
 
 **&#128906; Jeff(Cloud Engineer) Console**
 
-- Changeit1!
-
 - 개발팀(DeveloperGroup)용 정책 만들기
   - 정책명 : `DeveloperAccess`
   - 서비스 : Virtual Server
@@ -127,44 +125,29 @@
   - 인증 유형 : 인증키 인증
   - 적용 IP : 실습 PC Public IP(외부회사 IP)
 
-- 사내 IP에서만 접근하게 하는 정책(사내 직원 공통)
+- 사내 IP에서만 접근하게 하는 정책(사내 직원 공통) 만들기
   - 정책명 : `NetworkAccessPolicy`
-  - 권한 설정(JSON 모드)
-    ```json
-    {
-    	"Statement": [
-    		{
-    			"Action": [
-    				"*"
-    			],
-    			"Condition": {
-    				"NotIpAddress": {
-    					"scp:SourceIP": [
-    						"your_public_ip/32"  #실습 PC의 Public IP 입력
-    					]
-    				}
-    			},
-    			"Effect": "Deny",
-    			"Resource": [
-    				"*"
-    			],
-    			"Sid": "NetworkAccessControl"
-    		}
-    	],
-    	"Version": "2024-07-01"
-    }
-    ```
- 
-- DBA(Scott)용 정책([DBAccess](./policy/DBAccess.json)) 만들기
+  - 정책 문서 : ([NetworkAccessPolicy](./policy/NetworkAccessPolicy.json)
+   
+- DBA(Scott)용 정책 만들기
+  - 정책명 : `DBAccess`
+  - 정책 문서 : ([DBAccess](./policy/DBAccess.json)) 
 
-- Network Engineer(Leonard)용 정책([NetworkEngineerAccess](./policy/NetworkEngineerAccess.json)) 만들기
+- Network Engineer(Leonard)용 정책 만들기
+  - 정책명 : `NetworkEngineerAccess`
+  - 정책 문서 : ([NetworkEngineerAccess](./policy/NetworkEngineerAccess.json)) 
   
-- 인증키 인증 유형 정책과 함께 적용하는 정책([AccessKeyAccessDefault](./policy/AccessKeyAccessDefault.json)) 만들기
+- 인증키 인증 유형 정책과 함께 적용하는 정책 만들기
+  - 정책명 : `AccessKeyAccessDefault`
+  - 정책 문서 : ([AccessKeyAccessDefault](./policy/AccessKeyAccessDefault.json)) 
 
-- Console 인증 유형 정책과 함께 적용하는 정책([ConsoleAccessDefault](./policy/ConsoleAccessDefault.json)) 만들기
+- Console 인증 유형 정책과 함께 적용하는 정책 만들기
+  - 정책명 : `ConsoleAccessDefault`
+  - 정책 문서 : ([ConsoleAccessDefault](./policy/ConsoleAccessDefault.json)) 
   
-- 임시키 설정을 위한 정책([TemporaryKeySetupAccess](./policy/TemporaryKeySetupAccess.json)) 만들기
-
+- 임시키 설정을 위한 정책 만들기
+  - 정책명 : `TemporaryKeySetupAccess`
+  - 정책 문서 : ([TemporaryKeySetupAccess](./policy/TemporaryKeySetupAccess.json)) 
 
 ## 사용자 그룹 생성 및 사용자 연결
 

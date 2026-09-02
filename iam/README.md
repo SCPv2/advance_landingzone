@@ -190,6 +190,8 @@ edit $env:USERPROFILE\.scp\cli-config.json
 -  개발자 권한으로 CLI 실행
 
 ```powershell
+cd c:\scpv2lab\advance_landingzone\iam\
+
 scp-cli virtualserver server show --server_id ceapp_자원_ID
 
 scp-cli virtualserver server show --server_id ceweb_자원_ID

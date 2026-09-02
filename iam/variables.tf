@@ -1,8 +1,9 @@
 ########################################################
 # 사용자 입력
-# 아래 두 변수의 실제 값을 입력하세요.
+# 아래 세 변수의 실제 값을 입력하세요.
 # your_public _ip : 실습자가 사용하고 있는 PC의 Public IP 주소
 # your_account_id : 실습자가 접속하고 있는 Samsung Cloud Platform의 Account ID
+# iam_user_password : 사용자들의 비밀번호
 ########################################################
 
 variable "user_public_ip" {
@@ -13,6 +14,11 @@ variable "user_public_ip" {
 variable "iam_account_id" {
   type    = string
   default = "your_account_id"
+}
+
+variable "iam_root_password" {
+  type    = string
+  default = "iam_user_password"
 }
 
 ########################################################
@@ -266,11 +272,6 @@ variable "database_backup_option" {
 variable "iam_users" {
   type    = list(string)
   default = ["Alex", "Robert", "Scott", "Jeff", "Leonard"]
-}
-
-variable "iam_root_password" {
-  type    = string
-  default = "Changeit1!"
 }
 
 variable "iam_user_description" {

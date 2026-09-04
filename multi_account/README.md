@@ -1,5 +1,52 @@
 # Multi Account Management
 
+## Organization 
+
+- 조직 단위(OU) 생성
+
+- Account 생성
+  - Account명: `CE_Asia`
+  - 이메일: ID+1@도메인
+  - IAM 역할명: OrganizationAccountAccessRole
+ 
+  - Account명: `CE_Europe`
+  - 이메일: ID+2@도메인
+  - IAM 역할명: OrganizationAccountAccessRole
+ 
+- 통제정책 생성
+  - 통제 정책명: `ResourceControlPolicy`
+  - 서비스: `Multi-node GPU Cluster`
+  - 제어 유형: `거부 정책`
+  - 액션: `Create`
+  - 인증 유형: `모든 인증`
+  - 적용 IP: `모든 IP`
+
+  - 통제 정책명: `AsiaNetworkAccessPolicy`
+  - 
+
+- 조직 단위(OU) 생성
+  - 조직 단위명: `Subsidiary`
+
+- 통제정책 생성
+  - 통제 정책명: `AsiaControlPolicy`
+  - 통제 정책명: `EuropeControlPolicy`
+
+## ID Center
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## 실습 환경 구성
 
 - 작업 디렉토리 생성 및 작업 환경 가져오기

@@ -22,20 +22,18 @@
   - 적용 IP: `모든 IP`
 
   - 통제 정책명: `AsiaNetworkAccessPolicy`
-  - 
+  - 통제 정책명: `EuropeNetworkAccessPolicy`
 
 - 조직 단위(OU) 생성
   - 조직 단위명: `Subsidiary`
 
-- 통제정책 생성
-  - 통제 정책명: `AsiaControlPolicy`
-  - 통제 정책명: `EuropeControlPolicy`
-
 ## ID Center
 
+- 권한 세트 생성
+  - 기본 정책 : 사용, 전체 선택
+  - 인라인 정책 : 사용
 
-
-
+- 
 
 
 

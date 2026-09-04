@@ -1,0 +1,22 @@
+{
+	"Statement": [
+		{
+			"Action": [
+				"*"
+			],
+			"Condition": {
+				"NotIpAddress": {
+					"scp:SourceIP": [
+						"your_public_ip/32"  #실습 PC의 Public IP 입력
+					]
+				}
+			},
+			"Effect": "Deny",
+			"Resource": [
+				"*"
+			],
+			"Sid": "NetworkAccessControl"
+		}
+	],
+	"Version": "2024-07-01"
+}

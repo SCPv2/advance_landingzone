@@ -2,7 +2,8 @@
 
 ## Organization 
 
-- 조직 단위(OU) 생성
+- 조직 생성
+  - 조직명: `Creative-Energy`
 
 - Account 생성
   - Account명: `CE_Asia`

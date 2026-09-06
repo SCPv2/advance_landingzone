@@ -36,12 +36,17 @@
 **&#128906; ID Center 콘솔**
 
 - Account 할당
+  - Account: `CE_Production`
+  - 사용자: `Jeff.Creative`
+  - 권한세트: `SCPAdministratorAccess`
+
+- Account 할당
   - Account: `Audit`
   - 사용자: `Audrey`
   - 사용자 그룹: `SCPReadOnlyAccess`
 
 - Account 할당
-  - Account: `Audit`
+  - Account: `Log Archive`
   - 사용자: `Audrey`
   - 권한세트: `SCPReadOnlyAccess`
 

@@ -40,7 +40,7 @@
   - 권한세트: `SCPAdministratorAccess`
 
 - Account 할당
-  - Account: `Log Analytics`
+  - Account: `Log Achive`
   - 사용자: `Jeff.Creative`
   - 권한세트: `SCPAdministratorAccess`
 

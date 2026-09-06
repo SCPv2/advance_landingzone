@@ -38,12 +38,12 @@
   - 사용자 실명: `Jeff.Creative`
 
 - 권한 세트 생성(Cloud Engineer)
-  - 권한 세트명 : `Cloud Engineer`
+  - 권한 세트명 : `CloudEngineer`
   - 기본 정책 : 사용, `AdministratorAccess`
   - 인라인 정책 : 사용
     
 - 권한 세트 생성(Cloud Engineer)
-  - 권한 세트명 : `Cloud Monitor`
+  - 권한 세트명 : `CloudMonitor`
   - 기본 정책 : 사용, `ViewerAccess`
   - 인라인 정책 : 사용 
 

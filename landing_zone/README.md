@@ -41,12 +41,12 @@
 
 - Account 할당
   - Account: `Log Achive`
-  - 사용자: `Jeff.Creative`
+  - 사용자: `Roland`
   - 권한세트: `SCPAdministratorAccess`
 
 - Account 할당
   - Account: `Audit`
-  - 사용자: `Jeff.Creative`
+  - 사용자: `Roland`
   - 권한세트: `SCPAdministratorAccess`
 
 ## 가드레일 적용

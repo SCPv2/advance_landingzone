@@ -39,7 +39,22 @@
   - 사용자: `Jeff.Crative`
   - 권한세트: `SCPAdministratorAccess`
 
-## 탐지 가드레일 적용
+- Account 할당
+  - Account: `Log Analutics`
+  - 사용자: `Jeff.Crative`
+  - 권한세트: `SCPAdministratorAccess`
+
+- Account 할당
+  - Account: `Audit`
+  - 사용자: `Jeff.Crative`
+  - 권한세트: `SCPAdministratorAccess`
+
+## 가드레일 적용
+- 예방 가드레일 검토
 - 탐지 가드레일 적용: `CE_Production`
 
-## 공유 Account
+## 공유 Account 확인
+
+**&#128906; Jeff.Creative Access Portal 로그인**
+- Audit Account: Config Inspection 확인
+- Log Analytics Account: Object Storage 확인 

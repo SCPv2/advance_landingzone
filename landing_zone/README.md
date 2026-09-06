@@ -28,33 +28,28 @@
   - 사용자 실명: `Jeff Creative`
   - 이메일 ID+#@Domain
 
-- 사용자 및 액세스
-  - 사용자 가입 이메일 확인
+## 가드레일 적용
+- 예방 가드레일 검토
+- 탐지 가드레일 적용: `CE_Production`
 
 ## ID Center 사용자 설정 
 **&#128906; ID Center 콘솔**
 
 - Account 할당
-  - Account: `CE_Production`
-  - 사용자: `Jeff.Creative`
-  - 권한세트: `SCPAdministratorAccess`
-
-- Account 할당
-  - Account: `Log Achive`
-  - 사용자: `Roland`
-  - 권한세트: `SCPAdministratorAccess`
+  - Account: `Audit`
+  - 사용자: `Audrey`
+  - 사용자 그룹: `SCPReadOnlyAccess`
 
 - Account 할당
   - Account: `Audit`
-  - 사용자: `Roland`
-  - 권한세트: `SCPAdministratorAccess`
-
-## 가드레일 적용
-- 예방 가드레일 검토
-- 탐지 가드레일 적용: `CE_Production`
+  - 사용자: `Audrey`
+  - 권한세트: `SCPReadOnlyAccess`
 
 ## 공유 Account 확인
 
+**&#128906; Jeff.Creative Access Portal 로그인**
+- CE_Production Account 확인
+  
 **&#128906; Jeff.Creative Access Portal 로그인**
 - Audit Account: Config Inspection 확인
 - Log Analytics Account: Object Storage 확인 
